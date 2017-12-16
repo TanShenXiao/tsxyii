@@ -73,8 +73,10 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $name=new AliYunPhone();
-        $name->run();
+        $name=new AliYunPhone(Yii::$app->params['aliyuncode']);
+       $stdclass=$name->setParam("1832347709",1346)->run();
+       echo "<pre>";
+       print_r($stdclass);
         //return $this->render('index');
     }
 
