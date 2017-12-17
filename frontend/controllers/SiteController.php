@@ -4,15 +4,15 @@ namespace frontend\controllers;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
-use common\api\AliYunPhone;
+use common\models\SendCode;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use yii\web\Controller;
 
 /**
  * Site controller
@@ -65,21 +65,6 @@ class SiteController extends Controller
             ],
         ];
     }
-
-    /**
-     * Displays homepage.
-     *
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $name=new AliYunPhone(Yii::$app->params['aliyuncode']);
-       $stdclass=$name->setParam("1832347709",1346)->run();
-       echo "<pre>";
-       print_r($stdclass);
-        //return $this->render('index');
-    }
-
     /**
      * Logs in a user.
      *
@@ -214,5 +199,16 @@ class SiteController extends Controller
         return $this->render('resetPassword', [
             'model' => $model,
         ]);
+    }
+    /*
+     * 获取验证码
+     */
+    public function actionGetCode()
+    {
+        $post=Yii::$app->request->get();
+        $sendcode=new SendCode();
+        $post["code"]=74059;
+        return $this->asJson($sendcode->validateCode($post));
+
     }
 }

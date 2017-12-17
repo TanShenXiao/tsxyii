@@ -33,7 +33,7 @@ class Phonecode extends \yii\db\ActiveRecord
             [['status'], 'integer'],
             [['created_at'], 'safe'],
             [['phone'], 'string', 'max' => 11],
-            [['code'], 'string', 'max' => 10],
+            [['code'], 'integer'],
         ];
     }
 

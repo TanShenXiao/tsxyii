@@ -22,19 +22,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
-				
-				 <?= $form->field($model, 'phone') ?>
-				 
-				 <div class="form-group">
-					<label class="control-label" for="exampleInputAmount">请输入验证码</label>
-					<div class="input-group">
-						<input type="text" class="form-control" id="exampleInputAmount" placeholder="请输入验证码谢谢合作">
-						<div class="input-group-addon"><a id="phone-code" href="javascript:sendcode();">点击获取验证码</a></div>
-						
-					</div>
-				</div>
-
-
+                <?= $form->field($model, 'phone')->textInput() ?>
+                <?= $form->field($model, 'code')->textInput() ?>
+                <div class="input-group-addon"><a id="phone-code" href="javascript:sendcode();">点击获取验证码</a></div>
+                <p></p>
                 <div class="form-group">
                     <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
                 </div>

@@ -12,6 +12,7 @@ class SignupForm extends Model
     public $username;
     public $phone;
     public $password;
+    public $code;
 
 
     /**
@@ -32,6 +33,9 @@ class SignupForm extends Model
 
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
+
+            ['code','required'],
+            ['code','string','length'=>4]
         ];
     }
 
@@ -41,6 +45,7 @@ class SignupForm extends Model
 			'phone' => '手机号码',
 			'username' =>'用户名',
 			'password' => '密码',
+            'code' => '验证码',
 			
 		];
 	}
