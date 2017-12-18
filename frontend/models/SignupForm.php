@@ -3,6 +3,7 @@ namespace frontend\models;
 
 use yii\base\Model;
 use common\models\User;
+use common\models\SendCode;
 
 /**
  * Signup form
@@ -23,20 +24,38 @@ class SignupForm extends Model
         return [
             ['username', 'trim'],
             ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
+            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => '用户名已存在'],
             ['username', 'string', 'min' => 2, 'max' => 255],
 
             ['phone', 'trim'],
             ['phone', 'required'],
             ['phone', 'string', 'max' => 11,'min'=>11],
-            ['phone', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+            ['phone', 'unique', 'targetClass' => '\common\models\User', 'message' => '手机号码已存在'],
 
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
 
             ['code','required'],
-            ['code','string','length'=>4]
+            ['code','string','length'=>6],
+            ['code','validate_code']
         ];
+    }
+
+    /*
+     * 验证验证码
+     */
+    public function validate_code($attribute)
+    {
+        if($this->hasErrors()) return null;
+        $param['phone'] = $this->phone;
+        $param['code'] = $this->code;
+        $code=new SendCode();
+        $message=$code->validateCode($param);
+        if($message['code'] == 203){
+            $this->addError($attribute,$message['msg']);
+        }
+
+
     }
 
 	public function attributeLabels()
@@ -63,7 +82,7 @@ class SignupForm extends Model
         
         $user = new User();
         $user->username = $this->username;
-        $user->email = $this->email;
+        $user->phone = $this->phone;
         $user->setPassword($this->password);
         $user->generateAuthKey();
         

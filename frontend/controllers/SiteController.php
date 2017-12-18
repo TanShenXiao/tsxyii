@@ -205,10 +205,11 @@ class SiteController extends Controller
      */
     public function actionGetCode()
     {
-        $post=Yii::$app->request->get();
+        $post=Yii::$app->request->post();
         $sendcode=new SendCode();
-        $post["code"]=74059;
-        return $this->asJson($sendcode->validateCode($post));
+        $post["code"]=mt_rand(100000,999999);
+
+        return $this->asJson($sendcode->run($post));
 
     }
 }

@@ -78,7 +78,7 @@ class SendCode extends Model
              return ['code'=>203,'msg'=>current($this->getFirstErrors())];
          }
 
-         $new=Phonecode::find()->where(["phone"=>$this->phone,'status'=>20])->one();
+         $new=Phonecode::find()->where(["phone"=>$this->phone,'status'=>20])->orderBy("created_at desc")->one();
 
          if($new)
          {
@@ -90,8 +90,9 @@ class SendCode extends Model
             {
                 return ['code'=>203,'msg'=>'验证码错误'];
             }
+         $new->status=30;
+         if($new->save())  return ['code'=>200,'msg'=>'验证码发送成功'];
 
-            return "ok";
          }
          return ['code'=>203,'msg'=>'验证码已使用或未发送'];
 
