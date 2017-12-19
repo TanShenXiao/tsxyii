@@ -17,6 +17,8 @@ class IndexController extends HomeController
         echo "<pre>";
         print_r($stdclass);
         */
+       //$server = new \swoole_websocket_server("0.0.0.0", 9501);
+	phpinfo();
         return $this->render('index');
     }
 
