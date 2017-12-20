@@ -18,8 +18,14 @@ class IndexController extends HomeController
         print_r($stdclass);
         */
        //$server = new \swoole_websocket_server("0.0.0.0", 9501);
-	phpinfo();
         return $this->render('index');
     }
+	
+	public function actionChat()
+	{
+		echo "聊天正在开发中";
+		
+		return $this->render('chat');
+	}
 
 }
