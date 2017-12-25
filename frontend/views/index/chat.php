@@ -15,6 +15,7 @@ $this->title = 'TanShenXiao-聊天';
         font-size:larger;
         color:#337ab7;
         border-radius:20px;
+        padding-left: 20px;
     }
     .badge{
         background-color:#337ab7;
