@@ -37,7 +37,7 @@ AppAsset::register($this);
     ]);
     $menuItems = [
         ['label' => '首页', 'url' => ['/index/index']],
-        ['label' => '聊天', 'url' => ['/index/chat']],
+        ['label' => '聊天', 'url' => ['/char/index']],
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => '注册', 'url' => ['/site/signup']];
