@@ -20,6 +20,7 @@ class WebSocket extends Model
 
     public function __construct(array $config = [])
     {
+        session_start();
         parent::__construct($config);
         $this->swoole_websocket_server=new \swoole_websocket_server($this->ip,$this->port);
     }
@@ -47,11 +48,16 @@ class WebSocket extends Model
      */
     public function message(\swoole_websocket_server $server, $frame)
     {
-       // echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
         $data=explode("94bb8b5325d0c835",$frame->data,3);
+        if($data[0] == "tsx-save"){
+            $_SESSION['websocket']=[$data[1]]=$frame->fd;
+            return ;
+        }
         $this->SetSwoole($server, $frame,$data);
-
-        $server->push($frame->fd,$data[0]."发送给".$data[1]."发送的类容为".$data[2]);
+        if(!isset($_SESSION['websocket'][$data[1]])){
+            return ;
+        }
+        $server->push($_SESSION['websocket'][$data[1]],$data[2]);
     }
 
     /*
@@ -62,10 +68,11 @@ class WebSocket extends Model
         echo "用户已连接，连接的fid为{$request->fd}\n";
     }
     /*
-     * 当有人连接的时候
+     * 当有人关闭的时候
      */
     public function close($ser, $fd)
     {
+        
         echo "用户已关闭，关闭的fid为{$fd}\n";
     }
 
