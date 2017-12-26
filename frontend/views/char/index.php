@@ -37,7 +37,7 @@ $this->title = 'TanShenXiao-聊天';
 </style>
     <div class="row">
         <?php foreach($data as $item): ?>
-            <a href="/char/tx?id=<?=$data['id']?>"><div class="table-bordered"><?=$item['username']?><div class="top-left"><span class="badge">1</span></div></div></a>
+            <a href="/char/tx?id=<?=$item['id']?>"><div class="table-bordered"><?=$item['username']?><div class="top-left"><span class="badge">1</span></div></div></a>
         <?php endforeach;             ?>
     </div>
 <ul class="nav nav-pills navbar-fixed-bottom row navbar-tsx">
