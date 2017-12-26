@@ -61,6 +61,10 @@ $this->title = 'TanShenXiao-聊天';
 	.btn-primary{
 		 border-radius:10px;
 	}
+	.but{
+		height:100px;
+		border:1px solid red;
+	}
 	*{ margin:0; padding:0; border:0; outline:0; font-family:"Microsoft YaHei";}
 body{ font-size:12px;}
 #box{ width:200px; height:200px; background:orange; position:absolute; left:0; top:0;} 
@@ -118,6 +122,7 @@ a:hover,a:active {
 </style>
 <div class="title"><a href="/char/index"><span class="title-icon glyphicon glyphicon-menu-left"></a></span>韩大掉</div>
 <div class="content" id="container-txt">
+<div id="md"></div>
 	<dl class="vhe m1">
     	<dt><a>哥哥</a><span>2015-09-11</span></dt>
         <dd>我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试</dd>
@@ -149,20 +154,38 @@ a:hover,a:active {
     	<dt><a>丫头</a><span>2015-09-11</span></dt>
         <dd>我是测试我是测试我是测测试我是我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试测试试</dd>
     </dl>
-
-
-
 </div>
+
+
 <div class="navbar-fixed-bottom bottom">
 <input class="form-control" type="text" id="content" ><button type="button" class="btn btn-primary" onclick="send();">发送</button>
 </div>
 <script type="text/javascript">
+//websocket
+ var ws = new WebSocket("ws:120.77.37.194:9501");
+    ws.onopen = function(){
+               
+               };
+	ws.onmessage = function (evt){ 
+                var received_msg = evt.data;
+				var time="ss";
+                var content='<dl class="he m1"><dt><a>丫头</a><span>'+time+'</span></dt><dd>'+received_msg+'</dd></dl>';
+				$("#container-txt").append(content);
+               };
+	
+	ws.onclose = function(){ 
+                  // 关闭 websocket
+                  alert("连接已关闭..."); 
+               };
+			        
+			   
  function send(){
 	 var txt=$("#content").val();
 	 if(txt == ""){
 		 return ;
 	 }
 	 var time="time";
+	   ws.send(txt);
 	 var content='<dl class="vme m1"><dt><a>丫头</a><span>'+time+'</span></dt><dd>'+txt+'</dd></dl>';
 	 $("#container-txt").append(content);
 	 $("#content").val('');

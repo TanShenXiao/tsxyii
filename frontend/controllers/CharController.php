@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\models\Char;
 
 class CharController extends HomeController
 {
@@ -12,7 +13,9 @@ class CharController extends HomeController
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $model=new Char();
+        $data=$model->GetFriend();
+        return $this->render('index',['data'=>$data]);
     }
 
     public function actionTx()
