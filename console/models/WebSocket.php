@@ -50,7 +50,7 @@ class WebSocket extends Model
     {
         $data=explode("94bb8b5325d0c835",$frame->data,3);
         if($data[0] == "tsx-save"){
-            $_SESSION['websocket']=[$data[1]]=$frame->fd;
+            $_SESSION['websocket'][$data[1]]=$frame->fd;
             return ;
         }
         $this->SetSwoole($server, $frame,$data);
