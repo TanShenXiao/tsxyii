@@ -132,7 +132,8 @@ a:hover,a:active {
 //websocket
  var ws = new WebSocket("ws:120.77.37.194:9501");
     ws.onopen = function(){
-               
+			var txt="tsx-save";
+               ws.send(txt);
                };
 	ws.onmessage = function (evt){ 
                 var received_msg = evt.data;

@@ -72,7 +72,7 @@ class WebSocket extends Model
      */
     public function close($ser, $fd)
     {
-        
+
         echo "用户已关闭，关闭的fid为{$fd}\n";
     }
 
