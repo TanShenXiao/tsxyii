@@ -40,7 +40,7 @@ $this->title = 'TanShenXiao-聊天';
 		 border-radius:10px;
 		 margin-top:55px;
 		 padding:10px;
-		 height:1200px;
+		 height:100%;
 	}
 	.bottom{
 		height:60px;
@@ -76,7 +76,7 @@ body{ font-size:12px;}
 ul{ list-style:none;}
 .m1 { position:relative; }
 .m1:after,.m1:before { clear:both; content:""; display:table; height:0; margin-bottom:20px;}
-.m1 dt a{ width:60px; height:60px; background:#337ab7; display:inline-block; text-align:center; line-height:60px; }
+.m1 dt a{ font-size:24px;width:60px; height:60px; background:#337ab7; display:inline-block; text-align:center; line-height:60px; }
 .m1 dd{ max-width:274px;  border-radius:3px; padding:10px ;  background:#93e653; box-sizing:border-box; position:relative;}
 .m1 dd:before{ position:absolute; bottom:5px;  content:""; border-width:10px; border-style:solid; }
 .m1.he dd:before,.m1.vhe dd:before{ left:-20px; border-color:transparent #93e653  transparent transparent;   }
@@ -120,40 +120,10 @@ a:hover,a:active {
 .m2 li span{ float:left; padding-left:10px; margin-right:-100px;}
 
 </style>
-<div class="title"><a href="/char/index"><span class="title-icon glyphicon glyphicon-menu-left"></a></span>韩大掉</div>
+<div class="title"><a href="/char/index"><span class="title-icon glyphicon glyphicon-menu-left"></a></span><?=$data['username']?></div>
 <div class="content" id="container-txt">
 <div id="md"></div>
-	<dl class="vhe m1">
-    	<dt><a>哥哥</a><span>2015-09-11</span></dt>
-        <dd>我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试</dd>
-    </dl>
-    <dl class="me m1">
-    	<dt><a>丫头</a><span>2015-09-11</span></dt>
-        <dd>我是测试我是测试我是测测试我是测试试</dd>
-    </dl>
-    <dl class="he m1">
-    	<dt><a>哥哥</a><span>2015-09-11</span></dt>
-        <dd>我是测试我是测试我</dd>
-    </dl>
-    <dl class="vme m1">
-    	<dt><a>丫头</a><span>2015-09-11</span></dt>
-        <dd>我是测试我是测试我是测测试我是我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试测试试</dd>
-    </dl><dl class="vhe m1">
-    	<dt><a>哥哥</a><span>2015-09-11</span></dt>
-        <dd>我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试</dd>
-    </dl>
-    <dl class="me m1">
-    	<dt><a>丫头</a><span>2015-09-11</span></dt>
-        <dd>我是测试我是测试我是测测试我是测试试</dd>
-    </dl>
-    <dl class="he m1">
-    	<dt><a>哥哥</a><span>2015-09-11</span></dt>
-        <dd>我是测试我是测试我</dd>
-    </dl>
-    <dl class="vme m1">
-    	<dt><a>丫头</a><span>2015-09-11</span></dt>
-        <dd>我是测试我是测试我是测测试我是我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试我是测试测试试</dd>
-    </dl>
+	
 </div>
 
 
@@ -161,6 +131,9 @@ a:hover,a:active {
 <input class="form-control" type="text" id="content" ><button type="button" class="btn btn-primary" onclick="send();">发送</button>
 </div>
 <script type="text/javascript">
+
+
+
 //websocket
  var ws = new WebSocket("ws:120.77.37.194:9501");
     ws.onopen = function(){
@@ -168,9 +141,10 @@ a:hover,a:active {
                };
 	ws.onmessage = function (evt){ 
                 var received_msg = evt.data;
-				var time="ss";
-                var content='<dl class="he m1"><dt><a>丫头</a><span>'+time+'</span></dt><dd>'+received_msg+'</dd></dl>';
+				var time=getTime();
+                var content='<dl class="he m1"><dt><a><?=mb_substr("谭深潇",0,1,'utf-8')?></a><span>'+time+'</span></dt><dd>'+received_msg+'</dd></dl>';
 				$("#container-txt").append(content);
+				$(window).scrollTop($(document).height());
                };
 	
 	ws.onclose = function(){ 
@@ -184,12 +158,26 @@ a:hover,a:active {
 	 if(txt == ""){
 		 return ;
 	 }
-	 var time="time";
+	 var time=getTime();
 	   ws.send(txt);
-	 var content='<dl class="vme m1"><dt><a>丫头</a><span>'+time+'</span></dt><dd>'+txt+'</dd></dl>';
+	 var content='<dl class="vme m1"><dt><a><?=mb_substr($data['username'],0,1,'utf-8')?></a><span>'+time+'</span></dt><dd>'+txt+'</dd></dl>';
 	 $("#container-txt").append(content);
 	 $("#content").val('');
 
+	 $(window).scrollTop($(document).height());
+ }
+ 
+ function getTime()
+ {
+	 var myDate = new Date();
+	 var Year=myDate.getFullYear();
+	 var Month=myDate.getMonth();   
+	 var Da=myDate.getDate();   
+	 var Hours=myDate.getHours();    
+	 var Minutes=myDate.getMinutes();     
+	 var Time=myDate.getSeconds();     
+	
+	 return Year+"年-"+Month+"月-"+Da+"日 "+Hours+"时:"+Minutes+"分:"+Time+"秒";
 	 
  }
 

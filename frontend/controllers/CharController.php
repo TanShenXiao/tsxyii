@@ -15,12 +15,22 @@ class CharController extends HomeController
     {
         $model=new Char();
         $data=$model->GetFriend();
+
         return $this->render('index',['data'=>$data]);
     }
 
+    /*
+     * 通讯
+     */
     public function actionTx()
     {
-        return $this->render('tx');
+        $get=Yii::$app->request->get();
+        $model=new Char();
+        $data=$model->GetChatDate($get);
+        if($data['code'] == 203){
+            return $this->asJson($data['msg']);
+        }
+        return $this->render('tx',["data"=>$data['data']]);
     }
 
 
