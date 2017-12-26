@@ -122,14 +122,12 @@ a:hover,a:active {
 </style>
 <div class="title"><a href="/char/index"><span class="title-icon glyphicon glyphicon-menu-left"></a></span><?=$data['username']?></div>
 <div class="content" id="container-txt">
-<div id="md"></div>
-	
 </div>
-
-
 <div class="navbar-fixed-bottom bottom">
 <input class="form-control" type="text" id="content" ><button type="button" class="btn btn-primary" onclick="send();">发送</button>
 </div>
+<input type="hidden" value="<?=Yii::$app->user->identity->id?>" id="userid">
+<input type="hidden" value="<?=$data['id'];?>" id="senduid">
 <script type="text/javascript">
 //websocket
  var ws = new WebSocket("ws:120.77.37.194:9501");
@@ -151,7 +149,7 @@ a:hover,a:active {
 			        
 			   
  function send(){
-	 var txt=$("#content").val();
+ var txt=$("#userid").val()."94bb8b5325d0c835".$("#senduid").val()+"94bb8b5325d0c835"+$("#content").val();
 	 if(txt == ""){
 		 return ;
 	 }

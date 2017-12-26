@@ -47,9 +47,11 @@ class WebSocket extends Model
      */
     public function message(\swoole_websocket_server $server, $frame)
     {
-        echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
-        $user=Yii::$app->user->identity;
-        $server->push($frame->fd, "this is servser".$frame->fd.$user->username);
+       // echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
+        $data=explode("94bb8b5325d0c835",$frame->data,3);
+        $this->SetSwoole($server, $frame,$data['id']);
+
+        $server->push($frame->fd, "this is servser".$frame->$data[0]."发送给".$data[1]."发送的类容为".$data[2]);
     }
 
     /*
@@ -70,7 +72,7 @@ class WebSocket extends Model
     /*
      * 验证当前用户是否连接如何没有连接就创建
      */
-    public function SetSwoole(\swoole_websocket_server $server, $frame)
+    public function SetSwoole(\swoole_websocket_server $server, $frame,$uid)
     {
 
 
