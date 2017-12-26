@@ -51,7 +51,7 @@ class WebSocket extends Model
         $data=explode("94bb8b5325d0c835",$frame->data,3);
         $this->SetSwoole($server, $frame,$data);
 
-        $server->push($frame->fd, "this is servser".$frame->$data[0]."发送给".$data[1]."发送的类容为".$data[2]);
+        $server->push($frame->fd,$data[0]."发送给".$data[1]."发送的类容为".$data[2]);
     }
 
     /*
