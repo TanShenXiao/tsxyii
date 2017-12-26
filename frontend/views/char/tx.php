@@ -131,9 +131,6 @@ a:hover,a:active {
 <input class="form-control" type="text" id="content" ><button type="button" class="btn btn-primary" onclick="send();">发送</button>
 </div>
 <script type="text/javascript">
-
-
-
 //websocket
  var ws = new WebSocket("ws:120.77.37.194:9501");
     ws.onopen = function(){

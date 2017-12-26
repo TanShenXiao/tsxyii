@@ -48,7 +48,8 @@ class WebSocket extends Model
     public function message(\swoole_websocket_server $server, $frame)
     {
         echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
-        $server->push($frame->fd, "this is servser".$frame->fd);
+        $user=Yii::$app->user->identity;
+        $server->push($frame->fd, "this is servser".$frame->fd.$user->username);
     }
 
     /*
@@ -69,7 +70,7 @@ class WebSocket extends Model
     /*
      * 验证当前用户是否连接如何没有连接就创建
      */
-    public function SetSwoole()
+    public function SetSwoole(\swoole_websocket_server $server, $frame)
     {
 
 
