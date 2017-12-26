@@ -49,7 +49,7 @@ class WebSocket extends Model
     {
        // echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
         $data=explode("94bb8b5325d0c835",$frame->data,3);
-        $this->SetSwoole($server, $frame,$data['id']);
+        $this->SetSwoole($server, $frame,$data);
 
         $server->push($frame->fd, "this is servser".$frame->$data[0]."发送给".$data[1]."发送的类容为".$data[2]);
     }

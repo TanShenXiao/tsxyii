@@ -149,13 +149,13 @@ a:hover,a:active {
 			        
 			   
  function send(){
- var txt=$("#userid").val()."94bb8b5325d0c835".$("#senduid").val()+"94bb8b5325d0c835"+$("#content").val();
+ var txt=$("#userid").val()+"94bb8b5325d0c835"+$("#senduid").val()+"94bb8b5325d0c835"+$("#content").val();
 	 if(txt == ""){
 		 return ;
 	 }
 	 var time=getTime();
 	   ws.send(txt);
-	 var content='<dl class="vme m1"><dt><a><?=mb_substr($data['username'],0,1,'utf-8')?></a><span>'+time+'</span></dt><dd>'+txt+'</dd></dl>';
+	 var content='<dl class="vme m1"><dt><a><?=mb_substr($data['username'],0,1,'utf-8')?></a><span>'+time+'</span></dt><dd>'+$("#content").val();+'</dd></dl>';
 	 $("#container-txt").append(content);
 	 $("#content").val('');
 
