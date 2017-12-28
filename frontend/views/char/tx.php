@@ -129,7 +129,7 @@ a:hover,a:active {
                 <dt><a><?=mb_substr($data['username'],0,1,'utf-8')?></a><span><?=date("Y-m-d H:i:s",$val["created_at"])?></span></dt>
                 <dd><?=$val['content']?></dd>
             </dl>
-     <?php  }              ?>
+     <?php continue; }              ?>
         <dl class="me m1">
             <dt><a><?= mb_substr(Yii::$app->user->identity->username, 0, 1,'utf-8')?></a><span><?=date("Y-m-d H:i:s",$val["created_at"])?></span></dt>
             <dd><?=$val['content']?></dd>
