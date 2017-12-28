@@ -3,7 +3,10 @@ namespace console\models;
 
 use Yii;
 use yii\base\Model;
-use common\models\Swoolefd;
+use common\models\Chatrecord;
+use common\models\User;
+use yii\db\Exception;
+use yii\helpers\Json;
 
 class WebSocket extends Model
 {
@@ -48,7 +51,7 @@ class WebSocket extends Model
         });
 
         $this->swoole_websocket_server->on('close', function ($ser, $fd) {
-           $this->close($ser, $fd);
+          echo "fid为".$fd."的连接关闭";
         });
 
         $this->swoole_websocket_server->start();
@@ -62,17 +65,16 @@ class WebSocket extends Model
         $data=explode("94bb8b5325d0c835",$frame->data,3);
         $this->redis->select(0);
         if($data[0] == "tsx-save"){
-            $this->redis->set($data[1],$frame->fd);
+            $this->validate_user($data,$frame);
             return ;
         }
-        $this->SetSwoole($server, $frame,$data);
-        $send=$this->redis->get($data[1]);
-        if(!isset($send)){
-            $this->redis->select(1);
-
-            return ;
+        if(!$this->redis->get($data[0])){
+            $this->swoole_websocket_server->push($frame->fd,"身份验证失败");
         }
-        $server->push($send,$data[2]);
+        /*
+         * 对消息进行处理
+         */
+        $this->SetSwoole($server,$data);
     }
 
     /*
@@ -94,8 +96,74 @@ class WebSocket extends Model
     /*
      * 验证当前用户是否连接如何没有连接就创建
      */
-    public function SetSwoole(\swoole_websocket_server $server, $frame,$uid)
+    public function SetSwoole(\swoole_websocket_server $server,$data)
     {
+
+        $send=$this->redis->get($data[1]);
+        if(!isset($send)){
+            $this->redis->select(1);
+            $this->save_caht($data,30);
+            return ;
+        }
+        if($this->save_caht($data,20)) {
+            $server->push($send, $data[2]);
+        }
+    }
+
+    /*
+     * 身份验证
+     */
+    public function validate_user($data,$frame)
+    {
+        $row=User::find()->where(["status"=>10,'id'=>$data[1]])->one();
+        if($row){
+            $this->redis->set($data[1],$frame->fd);
+        }
+        $this->swoole_websocket_server->push($frame->fd,"身份验证失败");
+
+    }
+
+    /*
+     * 将消息记录保存到数据库
+     */
+    public function save_caht($data,$status=20)
+    {
+        $da=[
+            'uid'=>$data[0],
+            'fid'=>$data[1],
+            'content'=>$data[2],
+            'status'=>$status,
+            'created_at'=>time(),
+        ];
+        $begintransaction=Yii::$app->db->beginTransaction();
+        try{
+            $chat=new Chatrecord();
+            $chat->uid=$da['uid'];
+            $chat->fid=$da['fid'];
+            $chat->content=$da['content'];
+            $chat->status=$da['status'];
+            $chat->created_at=$da['created_at'];
+            if(!$chat->save()){
+                throw new Exception();
+            }
+            $json=Json::decode($chat);
+            $keysrray=[$data[0],$data[1]];
+            $key=sort($keyy,SORT_NUMERIC);
+            $this->redis->select(1);
+            if(!$this->redis->lPush($key,$json)){
+                throw new Exception();
+            }
+            if($this->redis->lLen($key) > 100){
+                $this->redis->rPop($key);
+            }
+            $begintransaction->commit();
+            return true;
+        }catch (\Exception $e){
+            $this->swoole_websocket_server->push($data[0],"消息发送失败");
+            $begintransaction->rollback();
+            return false;
+
+        }
 
 
     }
