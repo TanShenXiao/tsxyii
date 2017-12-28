@@ -147,7 +147,7 @@ class WebSocket extends Model
             if(!$chat->save()){
                 throw new Exception("");
             }
-            $json=Json::decode($da);
+            $json=Json::encode($da);
             $keysrray=[$data[0],$data[1]];
             $sortarray=sort($keysrray,SORT_NUMERIC);
             $key=$sortarray[0].$sortarray[1];
@@ -162,7 +162,6 @@ class WebSocket extends Model
             return true;
         }catch (\Exception $e){
             echo $e->getMessage();
-            echo "zz";
             $this->swoole_websocket_server->push($frame->fd,"消息发送失败");
             $begintransaction->rollback();
             return false;
