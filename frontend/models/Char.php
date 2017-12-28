@@ -59,15 +59,17 @@ class Char extends Model
     public function GetCharRecord($uid,$fid)
     {
         $array=[$uid,$fid];
-        sort($array);
+        ksort($array,SORT_NUMERIC);
         $key=$array[0].$array[1];
         $redis=new \redis();
         $redis->connect("127.0.0.1");
         $redis->select(1);
         $array=[];
-        foreach($redis->lRange($key,0,100)  as $kye=>$val){
-            $array[$key]=Json::decode($val);
+        foreach($redis->lRange($key,0,100) as $val){
+            $array[]=Json::decode($val);
         }
+        krsort($array,SORT_NUMERIC);
+
         return $array;
     }
 
