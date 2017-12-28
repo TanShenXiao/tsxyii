@@ -147,9 +147,9 @@ class WebSocket extends Model
             if(!$chat->save()){
                 throw new Exception();
             }
-            $json=Json::decode($chat);
+            $json=Json::decode($da);
             $keysrray=[$data[0],$data[1]];
-            $key=sort($keyy,SORT_NUMERIC);
+            $key=sort($keysrray,SORT_NUMERIC);
             $this->redis->select(1);
             if(!$this->redis->lPush($key[0].$key[1],$json)){
                 throw new Exception();
