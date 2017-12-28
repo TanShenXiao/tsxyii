@@ -12,12 +12,13 @@ class IndexController extends HomeController
      */
     public function actionIndex()
     {
-        /* $name=new AliYunPhone(Yii::$app->params['aliyuncode']);
-        $stdclass=$name->setParam("1832347709",1346)->run();
+       /* $name=new \redis();
+        $name->connect("127.0.0.1",);
         echo "<pre>";
-        print_r($stdclass);
-        */
-       //$server = new \swoole_websocket_server("0.0.0.0", 9501);
+        print_r($name->get("name"));
+        exit;
+       */
+
         return $this->render('index');
     }
 

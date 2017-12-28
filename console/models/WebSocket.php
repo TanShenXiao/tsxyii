@@ -12,17 +12,28 @@ class WebSocket extends Model
      */
     public $ip='0.0.0.0';
     /*
-     * 端口号
+     * swoole端口号
      */
-    public $port=9501;
-
+    public $sport=9501;
+    /*
+     * redis端口号
+     */
+    public $rport=6379;
+    /*
+     * swoole对象
+     */
     public $swoole_websocket_server;
+    /*
+     * redis对象
+     */
+    public $redis;
 
     public function __construct(array $config = [])
     {
-        session_start();
         parent::__construct($config);
-        $this->swoole_websocket_server=new \swoole_websocket_server($this->ip,$this->port);
+        $this->swoole_websocket_server=new \swoole_websocket_server($this->ip,$this->sport);
+        $this->redis=new \redis();
+        $this->redis->connect("127.0.0.1");
     }
 
     public function exe()
@@ -49,15 +60,19 @@ class WebSocket extends Model
     public function message(\swoole_websocket_server $server, $frame)
     {
         $data=explode("94bb8b5325d0c835",$frame->data,3);
+        $this->redis->select(0);
         if($data[0] == "tsx-save"){
-            $_SESSION['websocket'][$data[1]]=$frame->fd;
+            $this->redis->set($data[1],$frame->fd);
             return ;
         }
         $this->SetSwoole($server, $frame,$data);
-        if(!isset($_SESSION['websocket'][$data[1]])){
+        $send=$this->redis->get($data[1]);
+        if(!isset($send)){
+            $this->redis->select(1);
+
             return ;
         }
-        $server->push($_SESSION['websocket'][$data[1]],$data[2]);
+        $server->push($send,$data[2]);
     }
 
     /*
