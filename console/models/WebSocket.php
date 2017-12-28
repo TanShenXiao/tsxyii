@@ -145,14 +145,15 @@ class WebSocket extends Model
             $chat->status=$da['status'];
             $chat->created_at=$da['created_at'];
             if(!$chat->save()){
-              //  throw new Exception();
+                throw new Exception();
             }
             $json=Json::decode($da);
             $keysrray=[$data[0],$data[1]];
-            $key=sort($keysrray,SORT_NUMERIC);
+            $sortarray=sort($keysrray,SORT_NUMERIC);
+            $key=$sortarray[0].$sortarray[1];
             $this->redis->select(1);
-            if(!$this->redis->lPush($key[0].$key[1],$json)){
-                throw new Exception();
+            if(!$this->redis->lPush($key,$json)){
+                //throw new Exception();
             }
             if($this->redis->lLen($key) > 100){
                 $this->redis->rPop($key);
