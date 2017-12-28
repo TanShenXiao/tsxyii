@@ -125,7 +125,7 @@ a:hover,a:active {
     <?php foreach($data['record'] as $val):
         if($val['uid'] == $data['id']){
     ?>
-            <dl class="vhe m1">
+            <dl class="he m1">
                 <dt><a><?=mb_substr($data['username'],0,1,'utf-8')?></a><span><?=date("Y-m-d H:i:s",$val["created_at"])?></span></dt>
                 <dd><?=$val['content']?></dd>
             </dl>
