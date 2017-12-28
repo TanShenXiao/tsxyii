@@ -74,7 +74,7 @@ class WebSocket extends Model
         /*
          * 对消息进行处理
          */
-        $this->SetSwoole($server,$data);
+        $this->SetSwoole($server,$frame,$data);
     }
 
     /*
@@ -96,16 +96,16 @@ class WebSocket extends Model
     /*
      * 验证当前用户是否连接如何没有连接就创建
      */
-    public function SetSwoole(\swoole_websocket_server $server,$data)
+    public function SetSwoole(\swoole_websocket_server $server,$frame,$data)
     {
 
         $send=$this->redis->get($data[1]);
         if(!isset($send)){
             $this->redis->select(1);
-            $this->save_caht($data,30);
+            $this->save_caht($frame,$data,30);
             return ;
         }
-        if($this->save_caht($data,20)) {
+        if($this->save_caht($frame,$data,20)) {
             $server->push($send, $data[2]);
         }
     }
@@ -118,6 +118,7 @@ class WebSocket extends Model
         $row=User::find()->where(["status"=>10,'id'=>$data[1]])->one();
         if($row){
             $this->redis->set($data[1],$frame->fd);
+            return ;
         }
         $this->swoole_websocket_server->push($frame->fd,"身份验证失败");
 
@@ -126,7 +127,7 @@ class WebSocket extends Model
     /*
      * 将消息记录保存到数据库
      */
-    public function save_caht($data,$status=20)
+    public function save_caht($frame,$data,$status=20)
     {
         $da=[
             'uid'=>$data[0],
@@ -144,6 +145,8 @@ class WebSocket extends Model
             $chat->status=$da['status'];
             $chat->created_at=$da['created_at'];
             if(!$chat->save()){
+                echo "<pre>";
+                print_r($chat);
                 throw new Exception();
             }
             $json=Json::decode($chat);
@@ -159,7 +162,7 @@ class WebSocket extends Model
             $begintransaction->commit();
             return true;
         }catch (\Exception $e){
-            $this->swoole_websocket_server->push($data[0],"消息发送失败");
+            $this->swoole_websocket_server->push($frame->fd,"消息发送失败");
             $begintransaction->rollback();
             return false;
 
