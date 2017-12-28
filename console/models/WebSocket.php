@@ -153,7 +153,7 @@ class WebSocket extends Model
             $key=$sortarray[0].$sortarray[1];
             $this->redis->select(1);
             if(!$this->redis->lPush($key,$json)){
-                //throw new Exception();
+                throw new Exception();
             }
             if($this->redis->lLen($key) > 100){
                 $this->redis->rPop($key);
@@ -161,6 +161,8 @@ class WebSocket extends Model
             $begintransaction->commit();
             return true;
         }catch (\Exception $e){
+            echo $e->getMessage();
+            echo "zz";
             $this->swoole_websocket_server->push($frame->fd,"消息发送失败");
             $begintransaction->rollback();
             return false;
