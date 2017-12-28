@@ -145,7 +145,7 @@ class WebSocket extends Model
             $chat->status=$da['status'];
             $chat->created_at=$da['created_at'];
             if(!$chat->save()){
-                throw new Exception();
+              //  throw new Exception();
             }
             $json=Json::decode($da);
             $keysrray=[$data[0],$data[1]];
