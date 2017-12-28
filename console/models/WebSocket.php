@@ -149,8 +149,8 @@ class WebSocket extends Model
             }
             $json=Json::encode($da);
             $keysrray=[$data[0],$data[1]];
-            $sortarray=sort($keysrray,SORT_NUMERIC);
-            $key=$sortarray[0].$sortarray[1];
+            sort($keysrray,SORT_NUMERIC);
+            $key=$keysrray[0].$keysrray[1];
             $this->redis->select(1);
             if(!$this->redis->lPush($key,$json)){
                 throw new Exception("");
