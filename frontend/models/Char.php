@@ -5,6 +5,7 @@ use Yii;
 use yii\base\Model;
 use common\models\Friend;
 use common\models\User;
+use yii\helpers\Json;
 
 class Char extends Model
 {
@@ -45,8 +46,29 @@ class Char extends Model
         {
             return ['code'=>203,'msg'=>current($this->getFirstErrors())];
         }
+        $uid=Yii::$app->user->getId();
+        $fid=$this->friend['id'];
+        $this->friend['record']=$this->GetCharRecord($uid,$fid);
 
         return ['code'=>200,'data'=>$this->friend];
+    }
+
+    /*
+     * 获取前100条聊天记录
+     */
+    public function GetCharRecord($uid,$fid)
+    {
+        $array=[$uid,$fid];
+        sort($array);
+        $key=$array[0].$array[1];
+        $redis=new \redis();
+        $redis->connect("127.0.0.1");
+        $redis->select(1);
+        $array=[];
+        foreach($redis->lRange($key,0,100)  as $kye=>$val){
+            $array[$key]=Json::decode($val);
+        }
+        return $array;
     }
 
     /*

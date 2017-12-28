@@ -122,6 +122,24 @@ a:hover,a:active {
 </style>
 <div class="title"><a href="/char/index"><span class="title-icon glyphicon glyphicon-menu-left"></a></span><?=$data['username']?></div>
 <div class="content" id="container-txt">
+    <?php foreach($data['record'] as $val):
+        if($val['uid'] == $data['id']){
+    ?>
+            <dl class="vhe m1">
+                <dt><a><?=mb_substr($data['username'],0,1,'utf-8')?></a><span><?=date("Y-m-d H:i:s",$val["created_at"])?></span></dt>
+                <dd><?=$val['content']?></dd>
+            </dl>
+     <?php  }              ?>
+        <dl class="me m1">
+            <dt><a><?= mb_substr(Yii::$app->user->identity->username, 0, 1,'utf-8')?></a><span><?=date("Y-m-d H:i:s",$val["created_at"])?></span></dt>
+            <dd><?=$val['content']?></dd>
+        </dl>
+
+    <?php endforeach;                 ?>
+
+
+
+
 </div>
 <div class="navbar-fixed-bottom bottom">
 <input class="form-control" type="text" id="content" ><button type="button" class="btn btn-primary" onclick="send();">发送</button>
@@ -138,7 +156,7 @@ a:hover,a:active {
 	ws.onmessage = function (evt){ 
                 var received_msg = evt.data;
 				var time=getTime();
-                var content='<dl class="he m1"><dt><a><?=mb_substr("谭深潇",0,1,'utf-8')?></a><span>'+time+'</span></dt><dd>'+received_msg+'</dd></dl>';
+                var content='<dl class="he m1"><dt><a><?=mb_substr($data['username'],0,1,'utf-8')?></a><span>'+time+'</span></dt><dd>'+received_msg+'</dd></dl>';
 				$("#container-txt").append(content);
 				$(window).scrollTop($(document).height());
                };
@@ -156,7 +174,7 @@ a:hover,a:active {
 	 }
 	 var time=getTime();
 	   ws.send(txt);
-	 var content='<dl class="vme m1"><dt><a><?=mb_substr($data['username'],0,1,'utf-8')?></a><span>'+time+'</span></dt><dd>'+$("#content").val();+'</dd></dl>';
+	 var content='<dl class="vme m1"><dt><a><?= mb_substr(Yii::$app->user->identity->username, 0, 1,'utf-8')?></a><span>'+time+'</span></dt><dd>'+$("#content").val();+'</dd></dl>';
 	 $("#container-txt").append(content);
 	 $("#content").val('');
 
