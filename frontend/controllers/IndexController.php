@@ -19,12 +19,13 @@ class IndexController extends HomeController
         print_r($name->get("name"));
         exit;
        */
-        $redis=new \redis();
+        /*$redis=new \redis();
         $redis->connect("127.0.0.1");
         $redis->select(1);
         echo "<pre>";
         print_r($redis->lRange(45,0,100));
         exit;
+        */
 
 
         return $this->render('index');
