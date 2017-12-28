@@ -59,7 +59,7 @@ class Char extends Model
     public function GetCharRecord($uid,$fid)
     {
         $array=[$uid,$fid];
-        ksort($array,SORT_NUMERIC);
+        sort($array,SORT_NUMERIC);
         $key=$array[0].$array[1];
         $redis=new \redis();
         $redis->connect("127.0.0.1");
