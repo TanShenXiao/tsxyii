@@ -51,7 +51,8 @@ class WebSocket extends Model
         });
 
         $this->swoole_websocket_server->on('close', function ($ser, $fd) {
-          echo "fid为".$fd."的连接关闭";
+            $this->close($ser,$fd);
+            echo "fid为".$fd."的连接关闭";
         });
 
         $this->swoole_websocket_server->start();
@@ -142,13 +143,13 @@ class WebSocket extends Model
         $begintransaction=Yii::$app->db->beginTransaction();
         try{
             $chat=new Chatrecord();
-            $chat->uid=$da['uid'];
+            $chat->uid=$da['uid'];en
             $chat->fid=$da['fid'];
-            $chat->content=base64_decode($da['content']);
+            $chat->content=base64_code($da['content']);
             $chat->status=$da['status'];
             $chat->created_at=$da['created_at'];
             if(!$chat->save()){
-                throw new Exception("");
+                throw new Exception("添加到数据库失败");
             }
             $json=Json::encode($da);
             $keysrray=[$data[0],$data[1]];
