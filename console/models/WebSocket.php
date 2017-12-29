@@ -89,7 +89,10 @@ class WebSocket extends Model
      */
     public function close($ser, $fd)
     {
-
+        $this->redis->select(0);
+        $array=$this->redis->keys("*");
+        $key=array_search($fd,$array);
+        $this->redis->del($key);
         echo "用户已关闭，关闭的fid为{$fd}\n";
     }
 
