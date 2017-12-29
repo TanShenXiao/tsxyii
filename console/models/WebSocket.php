@@ -68,7 +68,7 @@ class WebSocket extends Model
             $this->validate_user($data,$frame);
             return ;
         }
-        if(!$this->redis->get($data[0])){
+        if(!$this->redis->hget("fd",$data[0])){
             $this->swoole_websocket_server->push($frame->fd,"身份验证失败");
         }
         /*
@@ -90,9 +90,9 @@ class WebSocket extends Model
     public function close($ser, $fd)
     {
         $this->redis->select(0);
-        $array=$this->redis->keys("*");
+        $array=$this->redis->hgetall("fd");
         $key=array_search($fd,$array);
-        $this->redis->del($key);
+        $this->redis->hdel("fd",$key);
         echo "用户已关闭，关闭的fid为{$fd}\n";
     }
 
@@ -102,7 +102,7 @@ class WebSocket extends Model
     public function SetSwoole(\swoole_websocket_server $server,$frame,$data)
     {
 
-        $send=$this->redis->get($data[1]);
+        $send=$this->redis->hget("fd",$data[1]);
         if(!isset($send)){
             $this->redis->select(1);
             $this->save_caht($frame,$data,30);
@@ -120,7 +120,7 @@ class WebSocket extends Model
     {
         $row=User::find()->where(["status"=>10,'id'=>$data[1]])->one();
         if($row){
-            $this->redis->set($data[1],$frame->fd);
+            $this->redis->hset("fd",$data[1],$frame->fd);
             return ;
         }
         $this->swoole_websocket_server->push($frame->fd,"身份验证失败");
@@ -144,7 +144,7 @@ class WebSocket extends Model
             $chat=new Chatrecord();
             $chat->uid=$da['uid'];
             $chat->fid=$da['fid'];
-            $chat->content=$da['content'];
+            $chat->content=base64_decode($da['content']);
             $chat->status=$da['status'];
             $chat->created_at=$da['created_at'];
             if(!$chat->save()){
