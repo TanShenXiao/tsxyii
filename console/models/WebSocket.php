@@ -143,9 +143,9 @@ class WebSocket extends Model
         $begintransaction=Yii::$app->db->beginTransaction();
         try{
             $chat=new Chatrecord();
-            $chat->uid=$da['uid'];en
+            $chat->uid=$da['uid'];
             $chat->fid=$da['fid'];
-            $chat->content=base64_code($da['content']);
+            $chat->content=base64_encode($da['content']);
             $chat->status=$da['status'];
             $chat->created_at=$da['created_at'];
             if(!$chat->save()){
