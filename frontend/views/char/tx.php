@@ -169,7 +169,7 @@ a:hover,a:active {
 			   
  function send(){
  var txt=$("#userid").val()+"94bb8b5325d0c835"+$("#senduid").val()+"94bb8b5325d0c835"+$("#content").val();
-	 if(txt == ""){
+	 if($("#content").val() == ""){
 		 return ;
 	 }
 	 var time=getTime();
@@ -194,6 +194,17 @@ a:hover,a:active {
 	 return Year+"年-"+Month+"月-"+Da+"日 "+Hours+"时:"+Minutes+"分:"+Time+"秒";
 	 
  }
+ window.onload=function (){
+ 	 document.getElementsByTagName("body")[0].addEventListener("keydown",function (e){
+     var even = e.event || window.event;
+        if(even.keyCode == 13){
+            send();
+        }
+		
+ });
+ 	
+ }
+ 
 
 </script>
 
