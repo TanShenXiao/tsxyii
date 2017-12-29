@@ -104,7 +104,7 @@ class WebSocket extends Model
     {
 
         $send=$this->redis->hget("fd",$data[1]);
-        if(!isset($send)){
+        if(empty($send)){
             $this->redis->select(1);
             $this->save_caht($frame,$data,30);
             return ;
