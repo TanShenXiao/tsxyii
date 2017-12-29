@@ -52,7 +52,7 @@ class WebSocket extends Model
 
         $this->swoole_websocket_server->on('close', function ($ser, $fd) {
             $this->close($ser,$fd);
-            echo "fid为".$fd."的连接关闭";
+            echo "连接关闭关闭的fid为".$fd."\n";
         });
 
         $this->swoole_websocket_server->start();
@@ -94,7 +94,6 @@ class WebSocket extends Model
         $array=$this->redis->hgetall("fd");
         $key=array_search($fd,$array);
         $this->redis->hdel("fd",$key);
-        echo "用户已关闭，关闭的fid为{$fd}\n";
     }
 
     /*
@@ -161,6 +160,9 @@ class WebSocket extends Model
             }
             if($this->redis->lLen($key) > 100){
                 $this->redis->rPop($key);
+            }
+            if($status == 30){
+                $this->redis->hIncrBy("UnreadMessage",$da['uid'].$da['fid'],1);
             }
             $begintransaction->commit();
             return true;
