@@ -159,7 +159,8 @@ a:hover,a:active {
                 var content='<dl class="he m1"><dt><a><?=mb_substr($data['username'],0,1,'utf-8')?></a><span>'+time+'</span></dt><dd>'+received_msg+'</dd></dl>';
 				$("#container-txt").append(content);
                 if (navigator.vibrate) {
-                 navigator.vibrate(2000);
+                 navigator.vibrate(500);
+                 navigator.vibrate(500);
                   } else if (navigator.webkitVibrate) {
                     navigator.webkitVibrate(2000);
                 }
