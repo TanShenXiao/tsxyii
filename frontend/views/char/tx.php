@@ -120,7 +120,7 @@ a:hover,a:active {
 .m2 li span{ float:left; padding-left:10px; margin-right:-100px;}
 
 </style>
-<div class="title"><a href="/char/index"><span class="title-icon glyphicon glyphicon-menu-left"></a></span><?=$data['username']?></div>
+<div class="title"><a href="javascript:target('/char/index');"><span class="title-icon glyphicon glyphicon-menu-left"></a></span><?=$data['username']?></div>
 <div class="content" id="container-txt">
     <?php foreach($data['record'] as $val):
         if($val['uid'] == $data['id']){
@@ -158,18 +158,24 @@ a:hover,a:active {
 				var time=getTime();
                 var content='<dl class="he m1"><dt><a><?=mb_substr($data['username'],0,1,'utf-8')?></a><span>'+time+'</span></dt><dd>'+received_msg+'</dd></dl>';
 				$("#container-txt").append(content);
+                if (navigator.vibrate) {
+                 navigator.vibrate(2000);
+                  } else if (navigator.webkitVibrate) {
+                    navigator.webkitVibrate(2000);
+                }
 				$(window).scrollTop($(document).height());
+
                };
 	
 	ws.onclose = function(){ 
                   // 关闭 websocket
-                  alert("连接已关闭..."); 
+                 // alert("连接已关闭...");
                };
 			        
 			   
  function send(){
  var txt=$("#userid").val()+"94bb8b5325d0c835"+$("#senduid").val()+"94bb8b5325d0c835"+$("#content").val();
-	 if(txt == ""){
+	 if($("#content").val() == ""){
 		 return ;
 	 }
 	 var time=getTime();
@@ -194,6 +200,20 @@ a:hover,a:active {
 	 return Year+"年-"+Month+"月-"+Da+"日 "+Hours+"时:"+Minutes+"分:"+Time+"秒";
 	 
  }
+ window.onload=function (){
+ 	 document.getElementsByTagName("body")[0].addEventListener("keydown",function (e){
+     var even = e.event || window.event;
+        if(even.keyCode == 13){
+            send();
+        }
+ });
+     $(window).scrollTop($(document).height());
+ }
+
+function target(url){
+    ws.close();
+    window.open(url,"_target");
+}
 
 
 </script>
