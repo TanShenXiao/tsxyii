@@ -160,7 +160,6 @@ a:hover,a:active {
 				$("#container-txt").append(content);
                 if (navigator.vibrate) {
                  navigator.vibrate(500);
-                 navigator.vibrate(500);
                   } else if (navigator.webkitVibrate) {
                     navigator.webkitVibrate(2000);
                 }
