@@ -142,7 +142,7 @@ class WebSocket extends Model
     {
         $da=[
             'uid'=>$data["send_id"],
-            'fid'=>$data["recevive"],
+            'fid'=>$data["receive"],
             'content'=>$data["content"],
             'status'=>$status,
             'created_at'=>time(),
