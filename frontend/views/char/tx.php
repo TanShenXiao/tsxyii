@@ -155,9 +155,14 @@ a:hover,a:active {
                ws.send(txt);
                };
 	ws.onmessage = function (evt){ 
-                var received_msg = evt.data;
+                var received_msg = JSON.parse(evt.data);
 				var time=getTime();
-                var content='<dl class="he m1"><dt><a><?=mb_substr($data['username'],0,1,'utf-8')?></a><span>'+time+'</span></dt><dd>'+received_msg+'</dd></dl>';
+				if(received_msg.code == 200) {
+                    var content = '<dl class="he m1"><dt><a><?=mb_substr($data['username'], 0, 1, 'utf-8')?></a><span>' + time + '</span></dt><dd>' + received_msg.content + '</dd></dl>';
+                }else{
+                    var content='<dl class="vme m1"><dt><a><?= mb_substr(Yii::$app->user->identity->username, 0, 1,'utf-8')?></a><span>'+time+'</span></dt><dd>'+received_msg.content+'</dd></dl>';
+                }
+
 				$("#container-txt").append(content);
                 if (navigator.vibrate) {
                  navigator.vibrate(500);
