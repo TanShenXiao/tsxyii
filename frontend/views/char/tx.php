@@ -120,7 +120,7 @@ a:hover,a:active {
 .m2 li span{ float:left; padding-left:10px; margin-right:-100px;}
 
 </style>
-<div class="title"><a href="/char/index"><span class="title-icon glyphicon glyphicon-menu-left"></a></span><?=$data['username']?></div>
+<div class="title"><a href="/index/index"><span class="title-icon glyphicon glyphicon-menu-left"></a></span><?=$data['username']?></div>
 <div class="content" id="container-txt">
     <?php foreach($data['record'] as $val):
         if($val['uid'] == $data['id']){
@@ -139,7 +139,7 @@ a:hover,a:active {
 
 
 
-
+<!--------------javascript:target('/char/index');--------->
 </div>
 <div class="navbar-fixed-bottom bottom">
 <input class="form-control" type="text" id="content" ><button type="button" class="btn btn-primary" onclick="send();">发送</button>
@@ -148,6 +148,7 @@ a:hover,a:active {
 <input type="hidden" value="<?=$data['id'];?>" id="senduid">
 <script type="text/javascript">
 //websocket
+ alert(ws);
  var ws = new WebSocket("ws:120.77.37.194:9501");
     ws.onopen = function(){
 			var txt="tsx-save"+"94bb8b5325d0c835"+$("#userid").val();
@@ -204,6 +205,8 @@ a:hover,a:active {
  });
  	
  }
+
+
  
 
 </script>
