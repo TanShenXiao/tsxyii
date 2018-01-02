@@ -11,6 +11,7 @@ use frontend\assets\AppAsset;
 use common\widgets\Alert;
 
 AppAsset::register($this);
+$csrf=Yii::$app->request->csrfToken;
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -25,7 +26,7 @@ AppAsset::register($this);
 </head>
 <body>
 <?php $this->beginBody() ?>
-
+<input type="hidden" value="<?=$csrf?>" id="csrf" />
 <div class="wrap">
     <?php
     NavBar::begin([

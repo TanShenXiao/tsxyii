@@ -37,8 +37,9 @@ class CharController extends HomeController
      */
     public function actionFriends()
     {
+        $get=Yii::$app->request->get();
         $model=new Char();
-        $data=$model->GetFriend();
+        $data=$model->GetFriend($get);
 
         return $this->render('friends',['data'=>$data]);
 

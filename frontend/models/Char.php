@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use common\models\Friend;
 use common\models\User;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 
 class Char extends Model
@@ -99,15 +100,20 @@ class Char extends Model
     /*
      * 获取好友
      */
-    public function GetFriend()
+    public function GetFriend($get)
     {
+        $name=ArrayHelper::getValue($get,"serach","");
         $identity=Yii::$app->user->identity;
         $data=Friend::find()->where(['status'=>2])->andWhere(['uid'=>$identity->id])->select("friend")->asArray()->all();
         $data=array_column($data,'friend');
+        $da=[];
+        $da['user']=User::find()->where(['status'=>10])->andWhere(['in','id',$data])->andFilterWhere(['like','username',$name])->asArray()->all();
+        if($name){
+            $da['yk']=User::find()->where(['status'=>10])->andWhere(["not",["id"=>$identity->getId()]])->andWhere(['not in','id',$data])->andFilterWhere(['like','username',$name])->asArray()->all();
 
-        $user=User::find()->where(['status'=>10])->andWhere(['in','id',$data])->asArray()->all();
+        }
 
-        return $user;
+        return $da;
     }
 
 }
