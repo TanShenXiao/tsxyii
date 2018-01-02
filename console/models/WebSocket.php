@@ -67,7 +67,7 @@ class WebSocket extends Model
         $data=json_decode($frame->data,true);
         print_r($data);
         $this->redis->select(0);
-        if($data["validate_user"]){
+        if(isset($data["validate_user"])){
             $this->validate_user($data["validate_user"],$frame);
             return ;
         }

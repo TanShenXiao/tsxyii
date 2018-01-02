@@ -175,7 +175,7 @@ a:hover,a:active {
 			        
 			   
  function send(){
- var txt='{"send_id":"'+$("#userid").val()+'","receive":"'+$("#senduid").val()+'","content":"'+encodeURIComponent($("#content").val())+'"}';
+ var txt='{"send_id":"'+$("#userid").val()+'","receive":"'+$("#senduid").val()+'","content":"'+encodeURIComponent($("#content").val())+'","code":1}';
 	 if($("#content").val() == ""){
 		 return ;
 	 }
