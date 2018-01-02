@@ -8,14 +8,26 @@ $this->title = 'TanShenXiao-聊天';
     .footer{
         display:none;
     }
+	.title{
+		border:1px solid red;
+		
+	}
+    .row{
+        margin:0px;
+    }
+	.wrap > .container{
+		padding: 55px 0px 0px;
+		
+		width:100%;
+	}
     .table-bordered{
         border-color:#337ab7;
         height:50px;
         line-height:50px;
         font-size:larger;
         color:#337ab7;
-        border-radius:20px;
         padding-left: 20px;
+        margin:10px;
     }
     .badge{
         background-color:#337ab7;
@@ -35,6 +47,18 @@ $this->title = 'TanShenXiao-聊天';
     }
 
 </style>
+<div class="row">
+  <div class="col-xs-8">
+    <input type="text" class="form-control" placeholder=".col-xs-8">
+  </div>
+  <div class="col-xs-2">
+    <button type="submit" class="btn btn-primary">搜索好友</button>
+  </div>
+  <div class="col-xs-2">
+   <button type="submit" class="btn btn-primary">搜索好友</button>
+  </div>
+</div>
+
     <div class="row">
         <?php foreach($data as $item): ?>
             <a href="/char/tx?id=<?=$item['id']?>"><div class="table-bordered"><?=$item['username']?><div class="top-left"></div></div></a>

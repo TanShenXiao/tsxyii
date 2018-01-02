@@ -14,7 +14,7 @@ class CharController extends HomeController
     public function actionIndex()
     {
         $model=new Char();
-        $data=$model->GetFriend();
+        $data=$model->GetRecord();
 
         return $this->render('index',['data'=>$data]);
     }

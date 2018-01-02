@@ -78,9 +78,9 @@ class Char extends Model
     }
 
     /*
-     * 获取好友
+     * 获取消息记录
      */
-    public function GetFriend()
+    public function GetRecord()
     {
         $identity=Yii::$app->user->identity;
         $data=Friend::find()->where(['status'=>2])->andWhere(['uid'=>$identity->id])->select("friend")->asArray()->all();
@@ -95,4 +95,19 @@ class Char extends Model
        }
        return $user;
     }
+
+    /*
+     * 获取好友
+     */
+    public function GetFriend()
+    {
+        $identity=Yii::$app->user->identity;
+        $data=Friend::find()->where(['status'=>2])->andWhere(['uid'=>$identity->id])->select("friend")->asArray()->all();
+        $data=array_column($data,'friend');
+
+        $user=User::find()->where(['status'=>10])->andWhere(['in','id',$data])->asArray()->all();
+
+        return $user;
+    }
+
 }
