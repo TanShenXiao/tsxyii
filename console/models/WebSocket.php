@@ -159,7 +159,7 @@ class WebSocket extends Model
                 throw new Exception("添加到数据库失败");
             }
             $json=Json::encode($da);
-            $keysrray=[$data["send_id"],$data["recevive"]];
+            $keysrray=[$data["send_id"],$data["receive"]];
             sort($keysrray,SORT_NUMERIC);
             $key=$keysrray[0].$keysrray[1];
             $this->redis->select(1);
