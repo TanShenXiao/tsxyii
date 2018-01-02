@@ -44,4 +44,5 @@ $this->title = 'TanShenXiao-聊天';
     <li role="presentation" class="active col-xs-4"><a href="/char/index">聊天</a></li>
     <li role="presentation" class="col-xs-4"><a href="">好友</a></li>
     <li role="presentation" class="col-xs-4"><a href="#">动态</a></li>
+    <li role="presentation" class="col-xs-4"><a href="#">动态</a></li>
 </ul>

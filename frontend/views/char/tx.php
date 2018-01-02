@@ -149,8 +149,8 @@ a:hover,a:active {
 <input type="hidden" value="<?=$data['id'];?>" id="senduid">
 <script type="text/javascript">
 //websocket
- alert(ws);
  var ws = new WebSocket("ws:120.77.37.194:9501");
+alert(ws);
     ws.onopen = function(){
 			var txt="tsx-save"+"94bb8b5325d0c835"+$("#userid").val();
                ws.send(txt);
