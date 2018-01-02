@@ -110,7 +110,7 @@ class WebSocket extends Model
     public function SetSwoole(\swoole_websocket_server $server,$frame,$data)
     {
 
-        $send=$this->redis->hget("fd",$data["send_id"]);
+        $send=$this->redis->hget("fd",$data["receive"]);
         if(empty($send)){
             $this->redis->select(1);
             $this->save_caht($frame,$data,30);
