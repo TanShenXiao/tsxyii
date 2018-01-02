@@ -64,7 +64,7 @@ class WebSocket extends Model
     public function message(\swoole_websocket_server $server, $frame)
     {
         echo $frame->data;
-        $data=json_encode($frame->data);
+        $data=json_decode($frame->data);
         print_r($data);
         $this->redis->select(0);
         if($data["validate_user"]){
