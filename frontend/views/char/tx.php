@@ -211,18 +211,10 @@ a:hover,a:active {
  });
      $(window).scrollTop($(document).height());
  }
-
-<<<<<<< HEAD
-
- 
-=======
 function target(url){
     ws.close();
     window.open(url,"_target");
 }
-
->>>>>>> dae137c0a3698019ad91533a49139fa9edaafd06
-
 </script>
 
 
