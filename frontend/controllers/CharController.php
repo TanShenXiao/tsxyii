@@ -32,6 +32,16 @@ class CharController extends HomeController
         }
         return $this->render('tx',["data"=>$data['data']]);
     }
+    /*
+     * 好友
+     */
+    public function actionFriends()
+    {
+        $model=new Char();
+        $data=$model->GetFriend();
 
+        return $this->render('friends',['data'=>$data]);
+
+    }
 
 }
