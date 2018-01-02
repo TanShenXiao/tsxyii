@@ -71,8 +71,14 @@ class Handel extends Model
          if(!$row){
              $this->addError($attribute,"好友已存在");
          }
-         $row=Friend::find()->where(["uid"=>$id,"friend"=>$this->fid])->one();
-         if($row and $row->status == 1){
+         if($this->scenario == self::CHARSAVE){
+             $row=Friend::find()->where(["uid"=>$this->fid,"friend"=>$id])->one();
+         }else{
+             $row=Friend::find()->where(["uid"=>$id,"friend"=>$this->fid])->one();
+         }
+
+         if($row and $row->status == 1 and  $this->scenario==self::CHARADD){
+
              $this->addError($attribute,"请求已发送");
          }
          if($row and $row->status == 2){
@@ -118,6 +124,27 @@ class Handel extends Model
              return ["code"=>203,"msg"=>current($this->getFirstErrors())];
          }
          $begintransaction=Yii::$app->db->beginTransaction();
+         try{
+                $this->fobject->status=2;
+                if($this->fobject->save()){
+                    throw new \Exception("操作数据失败");
+                }
+             $friend=new Friend();
+             $friend->uid=Yii::$app->user->getId();
+             $friend->friend=$this->fid;
+             $friend->status=1;
+             $friend->created_at=time();
+             $friend->updated_at=time();
+             if(!$friend->save()){
+                 return ["code"=>203,"meg"=>"请求失败"];
+             }
+             $begintransaction->commit();
+             return ["code"=>200,"msg"=>"申请已提交"];
+
+         }catch (\Exception $e){
+            $begintransaction->rollBack();
+             return ["code"=>203,"msg"=>$e->getMessage()];
+         }
 
      }
 
