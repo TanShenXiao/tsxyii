@@ -1,6 +1,7 @@
 <?php
 namespace frontend\models;
 
+use common\models\Chatrecord;
 use Yii;
 use yii\base\Model;
 use common\models\Friend;
@@ -49,7 +50,10 @@ class Char extends Model
         $uid=Yii::$app->user->getId();
         $fid=$this->friend['id'];
         $this->friend['record']=$this->GetCharRecord($uid,$fid);
-
+        $redis=new \redis();
+        $redis->connect("127.0.0.1");
+        $redis->select(1);
+        $redis->hSet("UnreadMessage",$fid.$uid,0);
         return ['code'=>200,'data'=>$this->friend];
     }
 
@@ -82,6 +86,13 @@ class Char extends Model
         $data=Friend::find()->where(['status'=>2])->andWhere(['uid'=>$identity->id])->select("friend")->asArray()->all();
         $data=array_column($data,'friend');
 
-       return User::find()->where(['status'=>10])->andWhere(['in','id',$data])->asArray()->all();
+       $user=User::find()->where(['status'=>10])->andWhere(['in','id',$data])->asArray()->all();
+        $redis=new \redis();
+        $redis->connect("127.0.0.1");
+        $redis->select(1);
+       foreach ($user as $key=>$val){
+           $user[$key]["num"]=$redis->hGet("UnreadMessage",$val["id"].$identity->id);
+       }
+       return $user;
     }
 }

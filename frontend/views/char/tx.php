@@ -120,7 +120,11 @@ a:hover,a:active {
 .m2 li span{ float:left; padding-left:10px; margin-right:-100px;}
 
 </style>
+<<<<<<< HEAD
 <div class="title"><a href="/index/index"><span class="title-icon glyphicon glyphicon-menu-left"></a></span><?=$data['username']?></div>
+=======
+<div class="title"><a href="javascript:target('/char/index');"><span class="title-icon glyphicon glyphicon-menu-left"></a></span><?=$data['username']?></div>
+>>>>>>> dae137c0a3698019ad91533a49139fa9edaafd06
 <div class="content" id="container-txt">
     <?php foreach($data['record'] as $val):
         if($val['uid'] == $data['id']){
@@ -159,12 +163,18 @@ a:hover,a:active {
 				var time=getTime();
                 var content='<dl class="he m1"><dt><a><?=mb_substr($data['username'],0,1,'utf-8')?></a><span>'+time+'</span></dt><dd>'+received_msg+'</dd></dl>';
 				$("#container-txt").append(content);
+                if (navigator.vibrate) {
+                 navigator.vibrate(500);
+                  } else if (navigator.webkitVibrate) {
+                    navigator.webkitVibrate(2000);
+                }
 				$(window).scrollTop($(document).height());
+
                };
 	
 	ws.onclose = function(){ 
                   // 关闭 websocket
-                  alert("连接已关闭..."); 
+                 // alert("连接已关闭...");
                };
 			        
 			   
@@ -201,13 +211,20 @@ a:hover,a:active {
         if(even.keyCode == 13){
             send();
         }
-		
  });
- 	
+     $(window).scrollTop($(document).height());
  }
 
+<<<<<<< HEAD
 
  
+=======
+function target(url){
+    ws.close();
+    window.open(url,"_target");
+}
+
+>>>>>>> dae137c0a3698019ad91533a49139fa9edaafd06
 
 </script>
 
