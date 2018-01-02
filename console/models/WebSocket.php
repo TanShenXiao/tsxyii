@@ -74,7 +74,7 @@ class WebSocket extends Model
         /*
          * 聊天界面
          */
-        if(!$this->redis->hget("fd",$data[0])){
+        if(!$this->redis->hget("fd",$data["send_id"])){
             $this->swoole_websocket_server->push($frame->fd,'{"code":203,"content":"身份验证失败"}');
         }
         if(isset($data["send_id"]) and isset($data["receive"]) and isset($data["code"]) and $data["code"] == 1 and $this->redis->hget("fd",$data["send_id"])){
