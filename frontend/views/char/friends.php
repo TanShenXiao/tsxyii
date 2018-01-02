@@ -37,11 +37,11 @@ $this->title = 'TanShenXiao-聊天';
 </style>
     <div class="row">
         <?php foreach($data as $item): ?>
-            <a href="/char/tx?id=<?=$item['id']?>"><div class="table-bordered"><?=$item['username']?><div class="top-left"><?=$item['num'] > 0?"<span class='badge'>".$item['num']."</span>":""?></div></div></a>
+            <a href="/char/tx?id=<?=$item['id']?>"><div class="table-bordered"><?=$item['username']?><div class="top-left"></div></div></a>
         <?php endforeach;             ?>
     </div>
 <ul class="nav nav-pills navbar-fixed-bottom row navbar-tsx">
     <li role="presentation" class="active col-xs-4"><a href="/char/index">聊天</a></li>
-    <li role="presentation" class="col-xs-4 col-xs-4"><a href="/char/friends">好友</a></li>
+    <li role="presentation" class="col-xs-4 active"><a href="/char/friends">好友</a></li>
     <li role="presentation" class="col-xs-4"><a href="#">动态</a></li>
 </ul>
