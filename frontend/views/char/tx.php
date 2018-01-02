@@ -120,11 +120,8 @@ a:hover,a:active {
 .m2 li span{ float:left; padding-left:10px; margin-right:-100px;}
 
 </style>
-<<<<<<< HEAD
 <div class="title"><a href="/index/index"><span class="title-icon glyphicon glyphicon-menu-left"></a></span><?=$data['username']?></div>
-=======
 <div class="title"><a href="javascript:target('/char/index');"><span class="title-icon glyphicon glyphicon-menu-left"></a></span><?=$data['username']?></div>
->>>>>>> dae137c0a3698019ad91533a49139fa9edaafd06
 <div class="content" id="container-txt">
     <?php foreach($data['record'] as $val):
         if($val['uid'] == $data['id']){
