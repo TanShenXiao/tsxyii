@@ -33,11 +33,16 @@ class Handel extends Model
       * 接受者对象
       */
      public $fobject;
+     /*
+      * 请求状态 1是同意2是拒接
+      */
+     public $status;
 
      public function rules()
      {
          return [
              [['fid'],'required','on'=>[self::CHARADD,self::CHARSAVE]],
+             ['status','in','range'=>[1,2]],
              ['fid','validate_fid'],
          ];
      }
@@ -89,8 +94,6 @@ class Handel extends Model
          if(!$this->validate()){
              return ["code"=>203,"msg"=>current($this->getFirstErrors())];
          }
-         $begintransaction=Yii::$app->db->beginTransaction();
-         try{
              $friend=new Friend();
              $friend->uid=Yii::$app->user->getId();
              $friend->friend=$this->fid;
@@ -98,26 +101,24 @@ class Handel extends Model
              $friend->created_at=time();
              $friend->updated_at=time();
              if(!$friend->save()){
-                 throw new \Exception("处理第一条数据失败");
+                 return ["code"=>203,"meg"=>"请求失败"];
              }
 
-             $friend1=new Friend();
-             $friend1->uid=$this->fid;
-             $friend1->friend=Yii::$app->user->getId();
-             $friend1->status=1;
-             $friend1->created_at=time();
-             $friend1->updated_at=time();
-             if(!$friend1->save()){
-                 throw new \Exception("处理第二条数据失败");
-             }
-             $begintransaction->commit();
              return ["code"=>200,"msg"=>"申请已提交"];
-         }catch(\Exception $e){
-             $begintransaction->rollback();
-             return ["code"=>203,"msg"=>$e->getMessage()];
+     }
+
+     /*
+      * 同意拒绝添加好友
+      */
+     public function TVS($post)
+     {
+         $this->scenario=self::CHARSAVE;
+         $this->load($post,"");
+         if(!$this->validate()){
+             return ["code"=>203,"msg"=>current($this->getFirstErrors())];
          }
-
-
+         $begintransaction=Yii::$app->db->beginTransaction();
 
      }
+
 }

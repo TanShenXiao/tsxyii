@@ -18,4 +18,16 @@ class HandelController extends HomeController
 
 
     }
+
+    /*
+     * 同意添加好友
+     */
+    public function actionCharSave()
+    {
+        $post=Yii::$app->request->post();
+        $model=new Handel();
+        return $this->asJson($model->SendAdd($post));
+
+
+    }
 }

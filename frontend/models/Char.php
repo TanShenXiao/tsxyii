@@ -84,7 +84,7 @@ class Char extends Model
     public function GetRecord()
     {
         $identity=Yii::$app->user->identity;
-        $data=Friend::find()->where(['status'=>2])->andWhere(['uid'=>$identity->id])->select("friend")->asArray()->all();
+        $data=Friend::find()->where(['status'=>1])->andWhere(['friend'=>$identity->id])->select("friend")->asArray()->all();
         $data=array_column($data,'friend');
 
        $user=User::find()->where(['status'=>10])->andWhere(['in','id',$data])->asArray()->all();
