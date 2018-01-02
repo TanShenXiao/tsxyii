@@ -63,19 +63,25 @@ class WebSocket extends Model
      */
     public function message(\swoole_websocket_server $server, $frame)
     {
-        $data=explode("94bb8b5325d0c835",$frame->data,3);
+        $data=json_encode($frame->data);
         $this->redis->select(0);
-        if($data[0] == "tsx-save"){
-            $this->validate_user($data,$frame);
+        if($data["validate_user"]){
+            $this->validate_user($data["validate_user"],$frame);
             return ;
         }
+        /*
+         * 聊天界面
+         */
         if(!$this->redis->hget("fd",$data[0])){
-            $this->swoole_websocket_server->push($frame->fd,"身份验证失败");
+            $this->swoole_websocket_server->push($frame->fd,'{"code":203,"content":"身份验证失败"}');
+        }
+        if(isset($data["send_id"]) and isset($data["receive"]) and isset($data["code"]) and $data["code"] == 1 and $this->redis->hget("fd",$data["send_id"])){
+            $this->SetSwoole($server,$frame,$data);
         }
         /*
          * 对消息进行处理
          */
-        $this->SetSwoole($server,$frame,$data);
+
     }
 
     /*
@@ -102,25 +108,25 @@ class WebSocket extends Model
     public function SetSwoole(\swoole_websocket_server $server,$frame,$data)
     {
 
-        $send=$this->redis->hget("fd",$data[1]);
+        $send=$this->redis->hget("fd",$data["send_id"]);
         if(empty($send)){
             $this->redis->select(1);
             $this->save_caht($frame,$data,30);
             return ;
         }
         if($this->save_caht($frame,$data,20)) {
-            $server->push($send, $data[2]);
+            $server->push($send, '{"code":203,"content":"'.urldecode($data["receive"]).'"}');
         }
     }
 
     /*
      * 身份验证
      */
-    public function validate_user($data,$frame)
+    public function validate_user($id,$frame)
     {
-        $row=User::find()->where(["status"=>10,'id'=>$data[1]])->one();
+        $row=User::find()->where(["status"=>10,'id'=>id])->one();
         if($row){
-            $this->redis->hset("fd",$data[1],$frame->fd);
+            $this->redis->hset("fd",$id,$frame->fd);
             return ;
         }
         $this->swoole_websocket_server->push($frame->fd,"身份验证失败");
@@ -133,9 +139,9 @@ class WebSocket extends Model
     public function save_caht($frame,$data,$status=20)
     {
         $da=[
-            'uid'=>$data[0],
-            'fid'=>$data[1],
-            'content'=>$data[2],
+            'uid'=>$data["send_id"],
+            'fid'=>$data["recevive"],
+            'content'=>$data["content"],
             'status'=>$status,
             'created_at'=>time(),
         ];
@@ -151,7 +157,7 @@ class WebSocket extends Model
                 throw new Exception("添加到数据库失败");
             }
             $json=Json::encode($da);
-            $keysrray=[$data[0],$data[1]];
+            $keysrray=[$data["send_id"],$data["recevive"]];
             sort($keysrray,SORT_NUMERIC);
             $key=$keysrray[0].$keysrray[1];
             $this->redis->select(1);
@@ -168,7 +174,7 @@ class WebSocket extends Model
             return true;
         }catch (\Exception $e){
             echo $e->getMessage();
-            $this->swoole_websocket_server->push($frame->fd,"消息发送失败");
+            $this->swoole_websocket_server->push($frame->fd,'{"code":200,"content":"消息发送失败"}');
             $begintransaction->rollback();
             return false;
 

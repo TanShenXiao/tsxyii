@@ -150,9 +150,8 @@ a:hover,a:active {
 <script type="text/javascript">
 //websocket
  var ws = new WebSocket("ws:120.77.37.194:9501");
-alert(ws);
     ws.onopen = function(){
-			var txt="tsx-save"+"94bb8b5325d0c835"+$("#userid").val();
+			var txt='{"validate_user":"'+$("#userid").val()+'","code":"1"}';
                ws.send(txt);
                };
 	ws.onmessage = function (evt){ 
@@ -176,7 +175,7 @@ alert(ws);
 			        
 			   
  function send(){
- var txt=$("#userid").val()+"94bb8b5325d0c835"+$("#senduid").val()+"94bb8b5325d0c835"+$("#content").val();
+ var txt='{"send_id":"'+$("#userid").val()+'","receive":"'+$("#senduid").val()+'","content":"'+encodeURIComponent($("#content").val())+'"';
 	 if($("#content").val() == ""){
 		 return ;
 	 }
