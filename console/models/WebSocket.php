@@ -117,7 +117,7 @@ class WebSocket extends Model
             return ;
         }
         if($this->save_caht($frame,$data,20)) {
-            $server->push($send, '{"code":203,"content":"'.urldecode($data["receive"]).'"}');
+            $server->push($send, '{"code":203,"content":"'.urldecode($data["content"]).'"}');
         }
     }
 
