@@ -126,7 +126,7 @@ class WebSocket extends Model
      */
     public function validate_user($id,$frame)
     {
-        $row=User::find()->where(["status"=>10,'id'=>id])->one();
+        $row=User::find()->where(["status"=>10,'id'=>$id])->one();
         if($row){
             $this->redis->hset("fd",$id,$frame->fd);
             return ;
