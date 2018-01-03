@@ -123,7 +123,7 @@ $root=$_SERVER['SERVER_NAME'];
 <ul class="nav nav-pills navbar-fixed-bottom row navbar-tsx">
     <li role="presentation" class="col-xs-4"><a href="/char/index">聊天</a></li>
     <li role="presentation" class="col-xs-4"><a href="/char/friends">好友</a></li>
-    <li role="presentation" class="col-xs-4 active"><a href="#">动态</a></li>
+    <li role="presentation" class="col-xs-4 active"><a href="/char/dynamic">动态</a></li>
 </ul>
 
 <script>
