@@ -34,6 +34,10 @@ class Handel extends Model
       */
      public $fobject;
      /*
+      * 关系表对象
+      */
+     public $friend;
+     /*
       * 请求状态 1是同意2是拒接
       */
      public $status;
@@ -41,7 +45,7 @@ class Handel extends Model
      public function rules()
      {
          return [
-             [['fid'],'required','on'=>[self::CHARADD,self::CHARSAVE]],
+             [['fid','status'],'required','on'=>[self::CHARADD,self::CHARSAVE]],
              ['status','in','range'=>[1,2]],
              ['fid','validate_fid'],
          ];
@@ -59,7 +63,7 @@ class Handel extends Model
      {
          return [
            self::CHARADD=>['fid'],
-           self::CHARSAVE=>['fid'],
+           self::CHARSAVE=>['fid','status'],
          ];
      }
 
@@ -69,10 +73,13 @@ class Handel extends Model
          $id=Yii::$app->user->getId();
          $this->fobject=$row=User::find()->where(["id"=>$this->fid])->one();
          if(!$row){
-             $this->addError($attribute,"好友已存在");
+             $this->addError($attribute,"用户不存在");
          }
          if($this->scenario == self::CHARSAVE){
-             $row=Friend::find()->where(["uid"=>$this->fid,"friend"=>$id])->one();
+             $this->friend=$row=Friend::find()->where(["uid"=>$this->fid,"friend"=>$id])->one();
+             if(!$row){
+                 $this->addError($attribute,'好友请求不存在');
+             }
          }else{
              $row=Friend::find()->where(["uid"=>$id,"friend"=>$this->fid])->one();
          }
@@ -125,21 +132,29 @@ class Handel extends Model
          }
          $begintransaction=Yii::$app->db->beginTransaction();
          try{
-                $this->fobject->status=2;
-                if($this->fobject->save()){
-                    throw new \Exception("操作数据失败");
-                }
+             if($this->status == 1) {
+                   $this->friend->status=2;
+                 if (!$this->friend->save()) {
+                     throw new \Exception("操作数据失败1");
+                 }
+             }elseif($this->status == 2){
+                 if(!$this->friend->delete()){
+                     throw new \Exception("操作数据失败");
+                 }
+                 $begintransaction->commit();
+                 return ["code"=>200,"msg"=>"拒绝成功"];
+             }
              $friend=new Friend();
              $friend->uid=Yii::$app->user->getId();
              $friend->friend=$this->fid;
-             $friend->status=1;
+             $friend->status=2;
              $friend->created_at=time();
              $friend->updated_at=time();
              if(!$friend->save()){
                  return ["code"=>203,"meg"=>"请求失败"];
              }
              $begintransaction->commit();
-             return ["code"=>200,"msg"=>"申请已提交"];
+             return ["code"=>200,"msg"=>"好友添加成功"];
 
          }catch (\Exception $e){
             $begintransaction->rollBack();

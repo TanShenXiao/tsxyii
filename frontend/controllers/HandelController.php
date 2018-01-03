@@ -26,7 +26,7 @@ class HandelController extends HomeController
     {
         $post=Yii::$app->request->post();
         $model=new Handel();
-        return $this->asJson($model->SendAdd($post));
+        return $this->asJson($model->TVS($post));
 
 
     }

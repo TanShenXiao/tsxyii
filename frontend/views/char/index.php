@@ -66,13 +66,19 @@ $id=Yii::$app->user->getId();
         var csrf=$("#csrf").val();
         $.post({
             url:"/handel/char-save",
-            data:{"fid":id,"status":status,"_csrf-frontend":csrf},
+            data:{"fid":fid,"status":status,"_csrf-frontend":csrf},
             datatype:"json",
             success:function (json){
-                alert(json.msg);
+                if(json.code == 203){
+                    alert(json.msg);
+                }
+                if(json.code == 200){
+                    alert(json.msg);
+                    location.reload();
+                }
             }
         });
     }
-    }
+
 
 </script>
