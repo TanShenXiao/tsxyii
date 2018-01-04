@@ -102,18 +102,19 @@ class Char extends Model
      */
     public function GetFriend($get)
     {
-        $name=ArrayHelper::getValue($get,"serach","");
-        $identity=Yii::$app->user->identity;
-        $data=Friend::find()->where(['status'=>2])->andWhere(['uid'=>$identity->id])->select("friend")->asArray()->all();
-        $data=array_column($data,'friend');
-        $da=[];
-        $da['user']=User::find()->where(['status'=>10])->andWhere(['in','id',$data])->andFilterWhere(['like','username',$name])->asArray()->all();
-        if($name){
-            $da['yk']=User::find()->where(['status'=>10])->andWhere(["not",["id"=>$identity->getId()]])->andWhere(['not in','id',$data])->andFilterWhere(['like','username',$name])->asArray()->all();
+        $name = ArrayHelper::getValue($get, "serach", "");
+        $identity = Yii::$app->user->identity;
+        $data = Friend::find()->where(['status' => 2])->andWhere(['uid' => $identity->id])->select("friend")->asArray()->all();
+        $data = array_column($data, 'friend');
+        $da = [];
+        $da['user'] = User::find()->where(['status' => 10])->andWhere(['in', 'id', $data])->andFilterWhere(['like', 'username', $name])->asArray()->all();
+        if ($name) {
+            $da['yk'] = User::find()->where(['status' => 10])->andWhere(["not", ["id" => $identity->getId()]])->andWhere(['not in', 'id', $data])->andFilterWhere(['like', 'username', $name])->asArray()->all();
 
         }
 
         return $da;
     }
+
 
 }

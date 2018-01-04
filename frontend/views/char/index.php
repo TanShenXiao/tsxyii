@@ -42,6 +42,7 @@ $id=Yii::$app->user->getId();
     .navbar-tsx{
         display:flex;
         text-align: center;
+        background:#fff;
     }
     a{
         text-decoration:none;

@@ -44,6 +44,7 @@ $this->title = 'TanShenXiao-聊天';
     .navbar-tsx{
         display:flex;
         text-align: center;
+        background:#fff;
     }
 	.botton{
 		float:right;
