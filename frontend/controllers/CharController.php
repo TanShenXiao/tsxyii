@@ -3,6 +3,7 @@ namespace frontend\controllers;
 
 use Yii;
 use frontend\models\Char;
+use frontend\models\Dynamic;
 use common\models\UpFile;
 use common\models\User;
 use yii\web\UploadedFile;
@@ -54,23 +55,10 @@ class CharController extends HomeController
      */
     public function actionDynamic()
     {
-        //var_dump(is_file("./data/timg.jpeg"));
-       /* $average = new \Imagick("./data/bj.jpg");
-        $average->quantizeImage(2, \Imagick::COLORSPACE_RGB, 0, false, false); // 这个里边的2表示获取 2个较多的颜色，1的话就是1个主要色调，这样
-        $average->uniqueImageColors();
-        $colorarr = array();
-        $it = $average->getPixelIterator();
-        $it->resetIterator();
-        $row = $it->getNextIteratorRow();
-            foreach ($row as $pixel) {
-
-                $colorarr[]= $pixel->getColor();
-            }
-   echo "<pre>";
-            print_r($colorarr);
-            exit;
-*/
-        return $this->render('dynamic');
+        $get=Yii::$app->request->get();
+        $model=new Char();
+        $data=$model->getDynamic($get);
+        return $this->render('dynamic',["data"=>$data,"own"=>isset($get["own"])?true:false]);
     }
 
     /*
@@ -115,6 +103,17 @@ class CharController extends HomeController
         }
         return $this->asJson(["code"=>203,"msg"=>"文件不存在"]);
 
+    }
+
+    /*
+     * 发表说说
+     */
+    public function actionPulish()
+    {
+        $post=Yii::$app->request->post();
+        $model=new Dynamic();
+
+        return $this->asJson($model->send($post));
     }
 
 }

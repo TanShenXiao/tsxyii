@@ -116,5 +116,24 @@ class Char extends Model
         return $da;
     }
 
+    /*
+     * 获取说说信息
+     */
+    public function getDynamic($get)
+    {
+        $id=Yii::$app->user->getId();
+        if(isset($get["own"])){
+            $data=[$id];
+        }else{
+            $data = Friend::find()->where(['status' => 2])->andWhere(['uid' => $id])->select("friend")->asArray()->all();
+            $data = array_column($data, 'friend');
+            array_push($data,$id);
+        }
+
+       return  \common\models\Dynamic::find()->where(["in","dynamic.uid",$data])
+           ->innerJoin(["a"=>User::tableName()],"dynamic.uid = a.id")
+           ->select(["dynamic.*","a.username as username","a.logo as logo"])->asArray()->all();
+    }
+
 
 }

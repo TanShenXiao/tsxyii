@@ -79,7 +79,8 @@ $root=$_SERVER['SERVER_NAME'];
         margin:10px 0px;
     }
     .content-tx-left-bottom{
-        font-size:4px;
+        margin-top:10px;
+        font-size:12px;
     }
     .title{
         height:50px;
@@ -93,12 +94,12 @@ $root=$_SERVER['SERVER_NAME'];
     }
     .title ul li{
         display:block;
-        height:50px;
+        height:40px;
         width:60px;
         float:left;
         margin-left:4px;
         text-align: center;
-        line-height: 50px;
+        line-height: 40px;
         color:rgb(80,87,141);
     }
     .at{
@@ -167,7 +168,7 @@ $root=$_SERVER['SERVER_NAME'];
     }
     .fb-content textarea{
         width:100%;
-        height:150px;
+        height:100px;
         border:0px;
     }
     .fb-img{
@@ -189,6 +190,30 @@ $root=$_SERVER['SERVER_NAME'];
         width:55px;
         height:55px;
     }
+    .fb-img li span{
+        position:absolute;
+        top:0px;
+        left:45px;
+    }
+    .active{
+        background:#00b3ee;
+    }
+    .content-imags ul{
+        list-style-type: none;
+        paddin:0px;
+        marfin:0px;
+    }
+    .content-imags ul li{
+        width:100px;
+        height:100px;
+        float:left;
+        margin:10px;
+    }
+    .content-imags ul li img{
+        width:100%;
+        height:100%;
+    }
+
 
 </style>
 <div class="top">
@@ -197,25 +222,27 @@ $root=$_SERVER['SERVER_NAME'];
 </div>
 <div class="title">
    <ul>
-       <li>所有</li>
-       <li>自己</li>
+       <a href="/char/dynamic"><li class="<?=$own == false?'active':'';?>">所有</li></a>
+       <a href="/char/dynamic?own=1"><li class="<?=$own == true ?'active':'';?>">自己</li></a>
        <li onclick="fb();">发表</li>
        <li onclick="bj();">背景</li>
        <li onclick="t();">头像</li>
    </ul>
 </div>
 <div class="content">
+    <?php foreach($data as $val):  ?>
     <div class="content-tx-left">
-        <div class="content-tx-left-top"><div class="content-tx"><img src="<?=$user->logo?>"></div>韩大义</div>
-        <div class="content-tx-left-jz">今天天气不错</div>
-       <div class="content-tx-left-bottom">时间：<?=date("Y-m-d H:i:s")?></div>
+        <div class="content-tx-left-top"><div class="content-tx"><img src="<?=$val['logo']?>"></div><?=$val['username']?></div>
+        <div class="content-tx-left-jz"><?=$val['content']?></div>
+        <div class="content-imags">
+            <ul>
+                
+            </ul>
+        </div>
+        <div style="clear: both;"></div>
+       <div class="content-tx-left-bottom">时间：<?=date("Y-m-d H:i:s",$val['created_at'])?></div>
     </div>
-    <div class="content-tx-left">
-        <div class="content-tx-left-top"><div class="content-tx"><img src="<?=$user->logo?>"></div>韩大义</div>
-        <div class="content-tx-left-jz">今天感觉良好</div>
-       <div class="content-tx-left-bottom">时间：<?=date("Y-m-d H:i:s")?></div>
-    </div>
-
+    <?php endforeach;       ?>
 </div>
 <ul class="nav nav-pills navbar-fixed-bottom row navbar-tsx">
     <li role="presentation" class="col-xs-4"><a href="/char/index">聊天</a></li>
@@ -252,20 +279,14 @@ $root=$_SERVER['SERVER_NAME'];
         <div class="at-wh tx fb-x">
             <div class="title">发表动态</div>
             <div class="fb-content">
-                <textarea></textarea>
+                <textarea id="ss-txt" placeholder="想说点什么。。。。。。"></textarea>
             </div>
-            <ul class="fb-img">
-                <li><img id="logoimg" src="<?=$user->logo?>"></li>
-                <li><img id="logoimg" src="<?=$user->logo?>"></li>
-                <li><img id="logoimg" src="<?=$user->logo?>"></li>
-                <li><img id="logoimg" src="<?=$user->logo?>"></li>
-                <li><img id="logoimg" src="<?=$user->logo?>"></li>
-                <li><img id="logoimg" src="<?=$user->logo?>"></li>
+            <ul class="fb-img" id="ssimg" >
             </ul>
             <div style="clear: both;"></div>
             <div class="tx-bottom">
-                <button type="button" class="btn btn-primary">上传背景图<input type="file" id="bgfile" name="imageFile" class="tx-file" /></button>
-                <button type="button" class="btn btn-success" id="bg-button">保存</button>
+                <button type="button" class="btn btn-primary">上传说说图片<input type="file" id="ssfile" name="imageFile" class="tx-file" /></button>
+                <button type="button" class="btn btn-success" id="ss-button">发表说说</button>
                 <input type="hidden" name="_csrf-frontend" value="<?=$csrf?>"/>
             </div>
         </div>
@@ -301,14 +322,20 @@ $root=$_SERVER['SERVER_NAME'];
         上传logo
          */
         $("#loginfile").change(function (){
-            upfile("#loginfile","#logoimg",1);
+            upfile("#loginfile","#logoimg",1,0);
         });
         /*
         上传背景
         */
         $("#bgfile").change(function (){
-            upfile("#bgfile","#bgimg",2);
+            upfile("#bgfile","#bgimg",2,0);
         })
+        /*
+        说说图片
+         */
+        $("#ssfile").change(function (){
+            upfile("#ssfile","#ssimg",2,1);
+        });
 
         $("#tx-button").click(function (){
             var dir=$("#logoimg").attr("src");
@@ -318,8 +345,19 @@ $root=$_SERVER['SERVER_NAME'];
             var dir=$("#bgimg").attr("src");
             change({"_csrf-frontend":"<?=$csrf?>","img":dir,"type":2},"/char/edit-logo");
         })
+        /*
+        发表说说
+         */
+        $("#ss-button").click(function (){
+            var images="";
+            $.each($(".fassimg"),function (a,b){
+                images+=$(b).attr('src')+",";
+            })
+            var content=$("#ss-txt").val();
+            change({"_csrf-frontend":"<?=$csrf?>","images":images,"content":content},"/char/pulish");
+        })
 
-        function upfile(clas1,clas2,type){
+        function upfile(clas1,clas2,type,append){
             var formData = new FormData();
             formData.append("imageFile",$(clas1).get(0).files[0]);
             formData.append("type",type);
@@ -335,7 +373,12 @@ $root=$_SERVER['SERVER_NAME'];
                        alert(json.msg);
                    }
                    if(json.code == 200){
-                        $(clas2).attr("src","."+json.dir);
+                       if(append){
+                          $(clas2).append('<li><img class="fassimg" src=".'+json.dir+'"><a href="javascript:;"><span onclick="de(this);" class="glyphicon glyphicon-remove"></span></a></li>');
+                       }else{
+                           $(clas2).attr("src","."+json.dir);
+                       }
+
                    }
                 }
             });
@@ -358,6 +401,13 @@ $root=$_SERVER['SERVER_NAME'];
                 }
             });
         }
-}
+        }
+        /*
+删除元素
+ */
+        function de(th){
+            $(th).parent().parent("li").remove();
+        }
+
 
 </script>
