@@ -210,6 +210,7 @@ $root=$_SERVER['SERVER_NAME'];
         float:left;
         display:inline;
         margin:5px;
+        overflow: hidden;
     }
     .content-imags ul li img{
         width:100%;
@@ -479,7 +480,9 @@ $root=$_SERVER['SERVER_NAME'];
                     "z-index":100,
                     top:"0px",
                     left:"0px",
-                    height:"100%",
+                    "height":"100%",
+                    "overflow":"scroll",
+
                     background:"rgba(0,0,0,0.8)",
                 };
                 var jsonli={
@@ -495,6 +498,7 @@ $root=$_SERVER['SERVER_NAME'];
                 var jsonimg = {
                 "vertical-align":"middle",
                     "width":$(window).width()+"px",
+                    "max-height":$(window).height()-140+"px",
 
                 };
                 ul.css(jsonul);
