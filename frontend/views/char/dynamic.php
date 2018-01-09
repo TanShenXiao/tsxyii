@@ -482,13 +482,12 @@ $root=$_SERVER['SERVER_NAME'];
                     height:"100%",
                     background:"rgba(0,0,0,0.8)",
                 };
-                var wh=($(document).height()/2)+40;
                 var jsonli={
                     width:$(window).width()+"px",
                     height:"100%",
                     margin:"0px",
                     float:"left",
-                    "line-height":wh+"px",
+                    "padding-top":"100px",
                     display:"inline",
 
                 };
