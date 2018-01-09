@@ -6,6 +6,7 @@ $this->title = 'TanShenXiao-聊天';
 $id=Yii::$app->user->getId();
 $user=Yii::$app->user->identity;
 $csrf=Yii::$app->request->csrfToken;
+$this->registerJsFile("@web/js/scrollPic.js",['position'=>$this::POS_END]);
 
 $root=$_SERVER['SERVER_NAME'];
 ?>
@@ -195,26 +196,74 @@ $root=$_SERVER['SERVER_NAME'];
         top:0px;
         left:45px;
     }
-    .active{
+    .active1{
         background:#00b3ee;
     }
     .content-imags ul{
         list-style-type: none;
-        paddin:0px;
-        marfin:0px;
+        padding:0px;
+        margin:0px;
     }
     .content-imags ul li{
         width:100px;
         height:100px;
         float:left;
-        margin:10px;
+        display:inline;
+        margin:5px;
     }
     .content-imags ul li img{
         width:100%;
-        height:100%;
+    }
+    .glyphicon-right{
+        position:fixed;
+        z-index:101;
+        border:2px solid rgb(80,87,141);
+        top:50%;
+        right:10px;
+        width:30px;
+        height:60px;
+        background:#ffffee;
+        line-height:60px;
+        text-align:center;
+        display:none;
+
+
+
     }
 
-
+    .glyphicon-left{
+        position:fixed;
+        z-index:101;
+       top:50%;
+        left:10px;
+        border:2px solid rgb(80,87,141);
+        width:30px;
+        height:60px;
+        line-height:60px;
+        text-align:center;
+        background:#ffffee;
+        display:none;
+    }
+    .images-title{
+        position:fixed;
+        top:55px;
+        left:0px;
+        width:100%;
+        height:40px;
+        z-index:101;
+        background:#3c3c3c;
+        color:#ffffee;
+        line-height: 40px;
+        padding-left:10px;
+        padding-right:10px;
+        text-align:center;
+        display:none;
+    }
+    .images-title span{
+        float:left;
+        line-height: 40px;
+        height:40px;
+    }
 </style>
 <div class="top">
     <img src="<?=$user->bgimg?>">
@@ -222,8 +271,8 @@ $root=$_SERVER['SERVER_NAME'];
 </div>
 <div class="title">
    <ul>
-       <a href="/char/dynamic"><li class="<?=$own == false?'active':'';?>">所有</li></a>
-       <a href="/char/dynamic?own=1"><li class="<?=$own == true ?'active':'';?>">自己</li></a>
+       <a href="/char/dynamic"><li class="<?=$own == false?'active1':'';?>">所有</li></a>
+       <a href="/char/dynamic?own=1"><li class="<?=$own == true ?'active1':'';?>">自己</li></a>
        <li onclick="fb();">发表</li>
        <li onclick="bj();">背景</li>
        <li onclick="t();">头像</li>
@@ -235,14 +284,26 @@ $root=$_SERVER['SERVER_NAME'];
         <div class="content-tx-left-top"><div class="content-tx"><img src="<?=$val['logo']?>"></div><?=$val['username']?></div>
         <div class="content-tx-left-jz"><?=$val['content']?></div>
         <div class="content-imags">
-            <ul>
-                
+            <ul id="image<?=$val["id"]?>">
+                <?php
+                $array=explode(",",trim($val['images'],","));
+                $i=0;
+                foreach ($array as $img):
+                    if(!empty($img)):
+                        echo "<li><img num='{$i}' src='{$img}' class='seeimage'></li>";
+                        $i++;
+                    endif;
+                endforeach;
+                ?>
             </ul>
         </div>
         <div style="clear: both;"></div>
        <div class="content-tx-left-bottom">时间：<?=date("Y-m-d H:i:s",$val['created_at'])?></div>
     </div>
     <?php endforeach;       ?>
+    <div class="images-title"><span class="img-colse glyphicon glyphicon-menu-left"></span><strong id="imgs"></strong>/<strong id="total"></strong></div>
+    <span id="imageleft" class="glyphicon glyphicon-menu-left glyphicon-left"></span>
+    <span id="imageright" class="glyphicon glyphicon-menu-right glyphicon-right"></span>
 </div>
 <ul class="nav nav-pills navbar-fixed-bottom row navbar-tsx">
     <li role="presentation" class="col-xs-4"><a href="/char/index">聊天</a></li>
@@ -356,6 +417,11 @@ $root=$_SERVER['SERVER_NAME'];
             var content=$("#ss-txt").val();
             change({"_csrf-frontend":"<?=$csrf?>","images":images,"content":content},"/char/pulish");
         })
+         $(".img-colse").click(function (){
+           location.reload();
+
+         })
+
 
         function upfile(clas1,clas2,type,append){
             var formData = new FormData();
@@ -401,13 +467,83 @@ $root=$_SERVER['SERVER_NAME'];
                 }
             });
         }
+
+            /*
+         查看说说图片
+          */
+            $(".seeimage").click(function ()
+            {
+                var ul=$(this).parent("li").parent("ul");
+                var jsonul={
+                    position:"fixed",
+                    "z-index":100,
+                    top:"0px",
+                    left:"0px",
+                    height:"100%",
+                    background:"rgba(0,0,0,0.8)",
+                };
+                var wh=($(document).height()/2)+40;
+                var jsonli={
+                    width:$(window).width()+"px",
+                    height:"100%",
+                    margin:"0px",
+                    float:"left",
+                    "line-height":wh+"px",
+                    display:"inline",
+
+                };
+
+                var jsonimg = {
+                "vertical-align":"middle",
+                    "width":$(window).width()+"px",
+
+                };
+                ul.css(jsonul);
+                ul.children("li").css(jsonli);
+                ul.children("li").children("img").css(jsonimg);
+                $(".glyphicon-left").css({"display":"block"});
+                $(".glyphicon-right").css({"display":"block"});
+                $(".images-title").css({"display":"block"});
+                $("#imageright").attr("onclick","return null;");
+                $("#total").text(ul.children("li").children("img").length);
+                var id=ul.attr("id");
+                var num=$(this).attr("num");
+                scrollPic(id,num);
+
+            })
+
         }
         /*
-删除元素
- */
-        function de(th){
+        删除元素
+        */
+        function de(th)
+        {
             $(th).parent().parent("li").remove();
         }
 
+        function scrollPic(contentid,num)
+        {
+            var width=$(window).width();
+            var scrollPic = new ScrollPic();
+            scrollPic.scrollContId   = contentid; //内容容器ID
+            scrollPic.arrLeftId      = "imageleft";//左箭头ID
+            scrollPic.arrRightId     = "imageright"; //右箭头ID
+
+           // scrollPic.dotListId      = "FS_numList_01";//点列表ID
+
+
+          //  scrollPic.listType     = "number";//列表类型(number:数字，其它为空)
+
+            scrollPic.frameWidth     = width;//显示框宽度
+            scrollPic.pageWidth      = width; //翻页宽度
+
+            scrollPic.speed          = 10; //移动速度(单位毫秒，越小越快)
+            scrollPic.space          = 10; //每次移动像素(单位px，越大越快)
+            scrollPic.autoPlay       = false; //自动播放
+            scrollPic.autoPlayTime   = 3; //自动播放间隔时间(秒)
+
+            scrollPic.initialize(); //初始化
+            scrollPic.pageTo(num)
+        }
 
 </script>
